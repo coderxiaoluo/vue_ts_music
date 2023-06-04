@@ -9,10 +9,15 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Aside: typeof import('./src/components/aside/aside.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElHeader: typeof import('element-plus/es')['ElHeader']
+    ElIcon: typeof import('element-plus/es')['ElIcon']
     ElMain: typeof import('element-plus/es')['ElMain']
+    Header: typeof import('./src/components/header/header.vue')['default']
+    Logo: typeof import('./src/components/aside/c-cpn/logo.vue')['default']
+    Main: typeof import('./src/components/main/Main.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

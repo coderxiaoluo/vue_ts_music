@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-
 // 引入less style
 import './assets/less/index.css'
+// 引入主题色
+import './theme/index.css'
 // 清除默认样式
 import 'normalize.css'
 // element信息提示组件样式
@@ -10,10 +11,8 @@ import 'element-plus/theme-chalk/el-message.css'
 // wow.js animate.css
 import 'animate.css'
 import 'animate.css/animate.compat.css'
-
 // store
 import store from './stores'
-
 // router
 import router from './routes'
 
