@@ -72,7 +72,7 @@ const searchValue = ref('')
     height: 100%;
     .el-icon {
       font-size: 20px;
-      color: #ffffff;
+      color: var(--music-search-color);
       margin: 0 10px;
     }
     .el-input {
@@ -82,9 +82,10 @@ const searchValue = ref('')
     }
     :deep(.el-input__prefix-inner) {
       font-size: 20px;
+      color: var(--music-search-color);
     }
     :deep(.el-input__inner) {
-      color: #ffffff;
+      color: var(--music-search-color);
     }
   }
   .right {
@@ -99,7 +100,7 @@ const searchValue = ref('')
         background-color: transparent;
         border: transparent;
         font-size: 18px;
-        color: #ffffff;
+        color: var(--music-header-right);
       }
     }
     .user-info {
@@ -117,6 +118,8 @@ const searchValue = ref('')
       }
       .loginBtn {
         width: 100px;
+        color: #ffffff;
+        background-color: var(--music-header-right);
       }
     }
   }

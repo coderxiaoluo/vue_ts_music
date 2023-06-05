@@ -1,4 +1,9 @@
 :root {
-  --music-bgc-primary: #ec4141;
+  --music-bgc-primary: #ffffff;
+  --music-icon-color: #000000;
+  --music-logo-bgc: #545499;
+  --music-search-color: #5d5b9c;
+  --music-header-right: #4d84fe;
   --music-aside-bgc: #ffffff;
+  --music-aside-active-text: #4d84fe;
 }

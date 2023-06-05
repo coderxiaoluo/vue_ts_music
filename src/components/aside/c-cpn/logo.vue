@@ -13,14 +13,14 @@ import logo from '@/logo'
 .logo {
   display: flex;
   height: 60px;
-  background-color: var(--music-bgc-primary);
+  background-color: var(--music-logo-bgc);
   img {
     width: 50px;
     height: 50px;
   }
   h1 {
     font-size: 20px;
-    color: #ffffff;
+    color: var(--music-bgc-primary);
     font-weight: 900;
   }
 }
