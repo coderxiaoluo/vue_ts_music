@@ -1,4 +1,5 @@
 export default {
-  title: 'music', //标题
-  logoimg: './src/assets/img/logo/viteimgpng.png' //图片
+  title: 'xiaoluomusic', //标题
+  logoimg: './src/assets/img/logo/viteimgpng.png', //图片
+  logoimg2: './src/assets/img/logo/logo2.svg' //图片
 }

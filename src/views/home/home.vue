@@ -2,7 +2,7 @@
   <div class="home">
     <el-container>
       <!-- 侧边栏组件 -->
-      <el-aside width="200px">
+      <el-aside :width="isFold ? '60px' : '200px'">
         <Aside></Aside>
       </el-aside>
       <el-container>
@@ -26,6 +26,11 @@ import Header from '@/components/header/header.vue'
 import Aside from '@/components/aside/aside.vue'
 // 主体组件
 import Main from '@/components/main/Main.vue'
+// 拿到store
+import { useSettingStore } from '@/stores/setting'
+import { storeToRefs } from 'pinia'
+const settingStore = useSettingStore()
+const { isFold } = storeToRefs(settingStore)
 </script>
 
 <style lang="less" scoped>
@@ -46,6 +51,7 @@ import Main from '@/components/main/Main.vue'
   .el-aside {
     height: 100%;
     background-color: var(--music-aside-bgc);
+    transition: all 0.5s;
   }
   // 主体
   .el-main {

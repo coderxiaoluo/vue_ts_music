@@ -3,7 +3,7 @@
     <!-- 左侧顶部 logo 以及 标题 -->
     <Logo></Logo>
     <!-- menu -->
-    <el-menu router default-active="1" class="menu">
+    <el-menu :collapse="isFold" router default-active="1" class="menu">
       <el-menu-item index="1">
         <el-icon><User /></el-icon>
         <span>发现音乐</span>
@@ -25,6 +25,12 @@
 
 <script setup lang="ts">
 import Logo from './c-cpn/logo.vue'
+import { useSettingStore } from '@/stores/setting'
+import { storeToRefs } from 'pinia'
+
+const settingStore = useSettingStore()
+// 折叠变量
+const { isFold } = storeToRefs(settingStore)
 </script>
 
 <style lang="less" scoped>
@@ -35,7 +41,7 @@ import Logo from './c-cpn/logo.vue'
   --el-menu-bg-color: var(--music-bgc-primary);
   --el-menu-text-color:var(--music-logo-bgc)
   height: calc(100vh - 60px);
-
+  --el-menu-border-color:none;
   color: var(--music-search-color);
 }
 // /选中时的背景颜色
