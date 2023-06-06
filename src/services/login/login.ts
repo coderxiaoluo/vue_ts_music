@@ -1,13 +1,14 @@
 import { localCache } from '@/utils/localCache'
 import lRequest from '..'
-
+const cookie = localCache.getCache('cookie')
 // 二维码 key 生成接口
 export function getLoginQrKey() {
   return lRequest.get({
     url: '/login/qr/key',
     params: {
       // 必须带上时间戳
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      withCredentials: true
     }
   })
 }
@@ -18,6 +19,7 @@ export function getCreateQr(key: any) {
     url: `/login/qr/create?key=${key}`,
     params: {
       timestamp: new Date().getTime(),
+      withCredentials: true,
       qrimg: true
     }
   })
@@ -29,15 +31,21 @@ export function inspectQr(key: any) {
   return lRequest.get({
     url: `/login/qr/check?key=${key}`,
     params: {
-      timestamp: new Date().getTime()
+      timestamp: new Date().getTime(),
+      withCredentials: true
     }
   })
 }
 
 // 获取登录状态
-export function getStatus() {
+export function getStatus(cookie: string) {
   return lRequest.get({
-    url: '/login/status'
+    url: '/login/status',
+    params: {
+      cookie: cookie,
+      timestamp: new Date().getTime(),
+      withCredentials: true
+    }
   })
 }
 

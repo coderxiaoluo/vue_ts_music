@@ -42,7 +42,7 @@ class LRequest {
 
     // 实例的拦截器
     this.instance.interceptors.request.use(
-      config.interceptors?.requestInterceptor,
+      // config.interceptors?.requestInterceptor,
       config.interceptors?.requestInterceptorCatch
     )
     this.instance.interceptors.response.use(

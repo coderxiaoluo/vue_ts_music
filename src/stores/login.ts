@@ -19,8 +19,10 @@ export const useLoginStore = defineStore('login', () => {
   const stopTimer = ref<number | undefined>()
   // 获取检测状态
   const inspect = ref<boolean>(false)
+  //  cookie
+  const cookie = ref<string>('')
   // 窗口
-  const isDialogTableVisible = ref(false)
+  const isDialogTableVisible = ref(true)
   //当前是否登录
   const isStatus = ref(false)
   // 用户信息
@@ -35,6 +37,7 @@ export const useLoginStore = defineStore('login', () => {
       getCreateQrAction(key)
       // 调用二维码检测扫码状态
       stopTimer.value = setInterval(() => {
+        console.log('我答应了')
         inspectQrAction(key)
       }, 2500)
     }
@@ -49,19 +52,24 @@ export const useLoginStore = defineStore('login', () => {
   // 二维码检测扫码状态
   async function inspectQrAction(key: string) {
     const result = await inspectQr(key)
+    console.log(result)
     // 待确认
     if (result.code === 802) {
       inspect.value = true
     }
     // 登录成功
     if (result.code === 803) {
-      // 获取用户信息
-      getUserAccountAction()
+      // 存储cookie
+      localCache.setCache('cookie', result.cookie)
+      cookie.value = result.cookie
+      console.log(result)
+      // 获取当前登录状态
+      getStatusAction(result.cookie)
       // 停止监听
       clearInterval(stopTimer.value)
       inspect.value = false
       // 关闭窗口
-      isDialogTableVisible.value = true
+      isDialogTableVisible.value = false
       // 登录成功
       ElMessage({
         message: '登录成功',
@@ -71,24 +79,25 @@ export const useLoginStore = defineStore('login', () => {
   }
 
   // 获取当前登录状态 当前是登录的还是没有登录
-  async function getStatusAction() {
-    const result = await getStatus()
-    console.log(result.data)
+  async function getStatusAction(cookie: string) {
+    const result = await getStatus(cookie)
+    console.log(result)
+    getUserAccountAction(result.data.account.id)
     // 用户已经登录过了
-    if (result.data.code === 200) {
-      console.log('用户已经登录过了')
-      isStatus.value = true
-    } else {
+    if (result.data.account.id == 8023474819) {
       isStatus.value = false
-      console.log('用户已经退出登录')
+      localCache.clearCache()
+    } else {
+      // 用户退出了
+      isStatus.value = true
     }
   }
   // 获取用户信息
-  async function getUserAccountAction() {
+  async function getUserAccountAction(id: number) {
     const result = await getUserAccount()
     localCache.setCache('account', result.account)
     // 用户详细信息
-    const result2 = getUserInfo(result.account.id)
+    const result2 = await getUserInfo(id)
     console.log(result2)
   }
 
@@ -100,8 +109,15 @@ export const useLoginStore = defineStore('login', () => {
 
   // 验证验证码
   async function getCaptchaVerifyAction(phone: number, verify: number) {
-    const result = getCaptchaVerify(phone, verify)
-    console.log(result)
+    const result = await getCaptchaVerify(phone, verify)
+    console.log(result.data)
+    // 手机号登录成功
+    if (result.data) {
+      console.log(result)
+
+      getStatusAction()
+      console.log('登录成功')
+    }
   }
   // 退出登录
   async function getExitLogoutAction() {

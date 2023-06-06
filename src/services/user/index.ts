@@ -1,16 +1,23 @@
 import lRequest from '..'
-
+import { localCache } from '@/utils/localCache'
+const cookie = localCache.getCache('cookie')
 // 获取用户详情
 export function getUserAccount() {
+  console.log(cookie)
   return lRequest.get({
-    url: '/user/account'
+    url: '/user/account',
+    params: {
+      cookie,
+      timestamp: new Date().getTime(),
+      withCredentials: true
+    }
   })
 }
 
-// 获取账号信息
+// 获取用户详情
 export function getUserInfo(id: number) {
   return lRequest.get({
-    url: `/user/binding?uid=${id}`
+    url: `/user/detail?uid=${id}`
   })
 }
 

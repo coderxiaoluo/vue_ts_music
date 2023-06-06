@@ -76,8 +76,6 @@ import { storeToRefs } from 'pinia'
 // import Login from '@/components/login/login.vue'
 // 获取store
 const loginStore = useLoginStore()
-// 获取登录状态
-loginStore.getStatusAction()
 
 const { qrimg, stopTimer, inspect, isStatus, isDialogTableVisible } = storeToRefs(loginStore)
 
@@ -94,9 +92,15 @@ const onLoginClick = () => {
   // 获取二维码
   loginStore.getLoginQrKeyAction()
 }
+watch(dialogTableVisible, (newVal) => {
+  // 关闭请求
+  if (!newVal) clearInterval(stopTimer.value)
+})
 
-watch(isDialogTableVisible, () => {
-  dialogTableVisible.value = isDialogTableVisible.value
+watch(isDialogTableVisible, (newVal) => {
+  dialogTableVisible.value = newVal
+  // 关闭请求
+  clearInterval(stopTimer.value)
 })
 
 // 关闭登录
