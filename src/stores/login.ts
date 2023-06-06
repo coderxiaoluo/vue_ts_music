@@ -17,8 +17,10 @@ export const useLoginStore = defineStore('login', () => {
   const qrimg = ref<string>('')
   // 停止检测二维码
   const stopTimer = ref<number | undefined>()
-  // 获取检测状态
+  // 获取检测状态 扫码中
   const inspect = ref<boolean>(false)
+  // 获取检测状态 二维码过期了
+  const expireQr = ref<boolean>(false)
   //  cookie
   const cookie = ref<string>('')
   // 窗口
@@ -37,7 +39,6 @@ export const useLoginStore = defineStore('login', () => {
       getCreateQrAction(key)
       // 调用二维码检测扫码状态
       stopTimer.value = setInterval(() => {
-        console.log('我答应了')
         inspectQrAction(key)
       }, 2500)
     }
@@ -56,6 +57,7 @@ export const useLoginStore = defineStore('login', () => {
     // 待确认
     if (result.code === 802) {
       inspect.value = true
+      return true
     }
     // 登录成功
     if (result.code === 803) {
@@ -75,6 +77,13 @@ export const useLoginStore = defineStore('login', () => {
         message: '登录成功',
         type: 'success'
       })
+    }
+    // 二维码过期了
+    if (result.code === 800) {
+      console.log('二维码过期了')
+      // 停止发送请求
+      clearInterval(stopTimer.value)
+      expireQr.value = true
     }
   }
 
@@ -114,8 +123,7 @@ export const useLoginStore = defineStore('login', () => {
     // 手机号登录成功
     if (result.data) {
       console.log(result)
-
-      getStatusAction()
+      // getStatusAction()
       console.log('登录成功')
     }
   }
@@ -133,6 +141,7 @@ export const useLoginStore = defineStore('login', () => {
     qrimg,
     stopTimer,
     inspect,
+    expireQr,
     isStatus,
     isDialogTableVisible,
     getLoginQrKeyAction,

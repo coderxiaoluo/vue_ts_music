@@ -15,7 +15,9 @@
 .main {
   width: 100%;
   height: 100%;
-  background-color: #cbc3c3;
+  box-sizing: border-box;
+  background-color: #f5f8ff;
+  padding: 20px;
 }
 
 .fade-enter-from {

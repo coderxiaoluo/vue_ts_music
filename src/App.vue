@@ -5,7 +5,13 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import WOW from 'wow.js'
+onMounted(() => {
+  new WOW().init()
+})
+</script>
 
 <style lang="less" scoped>
 .app {

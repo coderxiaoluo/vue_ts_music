@@ -39,6 +39,7 @@
             </div>
             <!-- 扫码的状态显示 -->
             <div class="mask" v-if="inspect">待确认</div>
+            <div class="mask" v-if="expireQr" @click="expireQrClick">重新发送</div>
           </el-tab-pane>
           <el-tab-pane label="手机号登录" name="2">
             <el-form
@@ -77,7 +78,8 @@ import { storeToRefs } from 'pinia'
 // 获取store
 const loginStore = useLoginStore()
 
-const { qrimg, stopTimer, inspect, isStatus, isDialogTableVisible } = storeToRefs(loginStore)
+const { qrimg, stopTimer, inspect, expireQr, isStatus, isDialogTableVisible } =
+  storeToRefs(loginStore)
 
 const formRef = ref<any>()
 
@@ -154,6 +156,11 @@ const loginBtnClick = (formRef: any | undefined) => {
       console.log('错误')
     }
   })
+}
+// 从新发送请求
+const expireQrClick = () => {
+  // 获取二维码
+  loginStore.getLoginQrKeyAction()
 }
 
 // 退出登录
