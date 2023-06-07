@@ -29,8 +29,16 @@ import Main from '@/components/main/Main.vue'
 // 拿到store
 import { useSettingStore } from '@/stores/setting'
 import { storeToRefs } from 'pinia'
+
+import { useRecommendStore } from '@/stores/recommend'
+
+// 判断侧边栏展开
 const settingStore = useSettingStore()
 const { isFold } = storeToRefs(settingStore)
+
+// 发送banner轮播图请求  也可以直接再个性推荐组件中发送，但每次切换都会发送一次，消耗性能
+const recommendStore = useRecommendStore()
+recommendStore.getBannerDataAction()
 </script>
 
 <style lang="less" scoped>

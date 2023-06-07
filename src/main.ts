@@ -11,6 +11,14 @@ import 'element-plus/theme-chalk/el-message.css'
 // wow.js animate.css
 import 'animate.css'
 import 'animate.css/animate.compat.css'
+
+// Import Swiper styles
+// Import Swiper styles
+import 'swiper/css'
+
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
+
 // store
 import store from './stores'
 // router

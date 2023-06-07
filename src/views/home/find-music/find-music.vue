@@ -22,7 +22,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { TabsPaneContext } from 'element-plus'
 
-const activeName = ref('first')
+const activeName = ref('/findmusic/recommend')
 
 // 切换路由
 const router = useRouter()

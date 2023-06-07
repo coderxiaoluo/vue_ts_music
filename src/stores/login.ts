@@ -8,8 +8,8 @@ import {
   getCaptchaSent,
   getCaptchaVerify,
   getExitLogout
-} from '@/services/login/login'
-import { getUserAccount, getUserInfo } from '@/services/user/index'
+} from '@/services/modules/login/login'
+import { getUserAccount, getUserInfo, getUserPlayList } from '@/services/modules/user'
 import { localCache } from '@/utils/localCache'
 import { ElMessage } from 'element-plus'
 export const useLoginStore = defineStore('login', () => {
@@ -26,9 +26,10 @@ export const useLoginStore = defineStore('login', () => {
   // 窗口
   const isDialogTableVisible = ref(true)
   //当前是否登录
-  const isStatus = ref(false)
+  const isStatus = ref<boolean>(localCache.getCache('isStatus') ?? false)
   // 用户信息
   const account = ref<any>(localCache.getCache('account') ?? {})
+  const profile = ref<any>(localCache.getCache('profile') ?? {})
   // 二维码 key 生成接口
   async function getLoginQrKeyAction() {
     const result = await getLoginQrKey()
@@ -53,7 +54,6 @@ export const useLoginStore = defineStore('login', () => {
   // 二维码检测扫码状态
   async function inspectQrAction(key: string) {
     const result = await inspectQr(key)
-    console.log(result)
     // 待确认
     if (result.code === 802) {
       inspect.value = true
@@ -64,7 +64,7 @@ export const useLoginStore = defineStore('login', () => {
       // 存储cookie
       localCache.setCache('cookie', result.cookie)
       cookie.value = result.cookie
-      console.log(result)
+
       // 获取当前登录状态
       getStatusAction(result.cookie)
       // 停止监听
@@ -80,7 +80,6 @@ export const useLoginStore = defineStore('login', () => {
     }
     // 二维码过期了
     if (result.code === 800) {
-      console.log('二维码过期了')
       // 停止发送请求
       clearInterval(stopTimer.value)
       expireQr.value = true
@@ -91,23 +90,32 @@ export const useLoginStore = defineStore('login', () => {
   async function getStatusAction(cookie: string) {
     const result = await getStatus(cookie)
     console.log(result)
-    getUserAccountAction(result.data.account.id)
+    // 登录后拿到用户信息
+    getUserAccountAction(result.data.account.id, cookie)
     // 用户已经登录过了
-    if (result.data.account.id == 8023474819) {
-      isStatus.value = false
-      localCache.clearCache()
+    if (result.data.account.id !== 8023474819) {
+      console.log('登录了')
+      isStatus.value = true
+      localCache.setCache('isStatus', true)
     } else {
       // 用户退出了
-      isStatus.value = true
+      // isStatus.value = false
+      // localCache.clearCache()
     }
   }
   // 获取用户信息
-  async function getUserAccountAction(id: number) {
-    const result = await getUserAccount()
+  async function getUserAccountAction(id: number, cookie: string) {
+    const result = await getUserAccount(cookie)
+    // 用户信息
     localCache.setCache('account', result.account)
+    account.value = result.account
     // 用户详细信息
     const result2 = await getUserInfo(id)
-    console.log(result2)
+    localCache.setCache('profile', result.profile)
+    profile.value = result2.profile
+
+    const result3 = await getUserPlayList(id)
+    console.log(result3)
   }
 
   // 发送验证码
@@ -137,6 +145,10 @@ export const useLoginStore = defineStore('login', () => {
       localCache.clearCache()
     }
   }
+
+  function changeIsStatus() {
+    isStatus.value = false
+  }
   return {
     qrimg,
     stopTimer,
@@ -144,6 +156,7 @@ export const useLoginStore = defineStore('login', () => {
     expireQr,
     isStatus,
     isDialogTableVisible,
+    changeIsStatus,
     getLoginQrKeyAction,
     getStatusAction,
     getCaptchaSentAction,

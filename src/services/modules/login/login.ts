@@ -1,6 +1,4 @@
-// import { localCache } from '@/utils/localCache'
-import lRequest from '..'
-// const cookie = localCache.getCache('cookie')
+import lRequest from '../../'
 // 二维码 key 生成接口
 export function getLoginQrKey() {
   return lRequest.get({

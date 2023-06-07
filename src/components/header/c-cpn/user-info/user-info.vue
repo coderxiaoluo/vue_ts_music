@@ -30,6 +30,7 @@
         title="请登录"
         center="center"
         draggable
+        class="dialog"
       >
         <el-tabs v-model="activeName" class="tab-login" stretch>
           <el-tab-pane label="扫码登录" name="1">
@@ -73,6 +74,7 @@
 import { reactive, ref, watch } from 'vue'
 import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
+// import { localCache } from '@/utils/localCache'
 
 // import Login from '@/components/login/login.vue'
 // 获取store
@@ -165,6 +167,7 @@ const expireQrClick = () => {
 
 // 退出登录
 const exitUserClick = () => {
+  // loginStore.changeIsStatus()
   loginStore.getExitLogoutAction()
 }
 </script>
@@ -194,6 +197,8 @@ const exitUserClick = () => {
   position: fixed;
   left: 50%;
   top: 50%;
+  z-index: 9999;
+
   .el-dialog {
     text-align: center;
   }
