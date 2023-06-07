@@ -2,11 +2,11 @@
   <!-- 用户信息 -->
   <div class="user-info">
     <template v-if="isStatus">
-      <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+      <el-avatar :src="profile.avatarUrl" />
       <!-- 登录后展示 -->
       <el-dropdown class="dropdown">
         <span class="el-dropdown-link">
-          小罗
+          {{ profile.nickname }}
           <el-icon class="el-icon--right">
             <arrow-down />
           </el-icon>
@@ -28,7 +28,6 @@
         @click="onCloseClick"
         v-model="dialogTableVisible"
         title="请登录"
-        center="center"
         draggable
         class="dialog"
       >
@@ -75,16 +74,17 @@ import { reactive, ref, watch } from 'vue'
 import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
 // import { localCache } from '@/utils/localCache'
-
+import type { FormInstance, FormRules } from 'element-plus'
+import { localCache } from '@/utils/localCache'
 // import Login from '@/components/login/login.vue'
 // 获取store
 const loginStore = useLoginStore()
 
-const { qrimg, stopTimer, inspect, expireQr, isStatus, isDialogTableVisible } =
+const { qrimg, stopTimer, inspect, expireQr, account, profile, isStatus, isDialogTableVisible } =
   storeToRefs(loginStore)
 
-const formRef = ref<any>()
-
+const formRef = ref<FormInstance>()
+console.log(profile)
 // 登录页面展示
 const dialogTableVisible = ref(false)
 
@@ -121,7 +121,7 @@ const rulePhone = reactive({
 })
 
 // 校验规则
-const rules = reactive<any>({
+const rules = reactive<FormRules>({
   phone: [
     { required: true, message: '请输入手机号', trigger: 'blur' },
     {
@@ -134,9 +134,9 @@ const rules = reactive<any>({
 })
 
 // 发送验证码
-const loginBtnCodeClick = (formRef: any | undefined) => {
+const loginBtnCodeClick = (formRef: FormInstance | undefined) => {
   if (!formRef) return
-  formRef.validate((valid: any) => {
+  formRef.validate((valid: boolean) => {
     if (valid) {
       console.log('已发送')
       // 拿到手机号发送请求
@@ -148,9 +148,9 @@ const loginBtnCodeClick = (formRef: any | undefined) => {
 }
 
 // 登录
-const loginBtnClick = (formRef: any | undefined) => {
+const loginBtnClick = (formRef: FormInstance | undefined) => {
   if (!formRef) return
-  formRef.validate((valid: any) => {
+  formRef.validate((valid: boolean) => {
     if (valid) {
       // 拿到手机号发送请求
       loginStore.getCaptchaVerifyAction(Number(rulePhone.phone), Number(rulePhone.verify))

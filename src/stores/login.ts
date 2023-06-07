@@ -13,6 +13,8 @@ import { getUserAccount, getUserInfo, getUserPlayList } from '@/services/modules
 import { localCache } from '@/utils/localCache'
 import { ElMessage } from 'element-plus'
 export const useLoginStore = defineStore('login', () => {
+  // 判断是否登录
+  // const isLogin = ref<boolean>(localCache.getCache('isLogin') ?? false)
   // 二维码
   const qrimg = ref<string>('')
   // 停止检测二维码
@@ -30,6 +32,9 @@ export const useLoginStore = defineStore('login', () => {
   // 用户信息
   const account = ref<any>(localCache.getCache('account') ?? {})
   const profile = ref<any>(localCache.getCache('profile') ?? {})
+
+  //  歌单
+  const userplaylist = ref()
   // 二维码 key 生成接口
   async function getLoginQrKeyAction() {
     const result = await getLoginQrKey()
@@ -89,12 +94,23 @@ export const useLoginStore = defineStore('login', () => {
   // 获取当前登录状态 当前是登录的还是没有登录
   async function getStatusAction(cookie: string) {
     const result = await getStatus(cookie)
-    console.log(result)
+    const data = result.data
+    // =++++++++
+    // 存储用户信息
+    account.value = data.account
+    profile.value = data.profile
+    localCache.setCache('account', data.account)
+    localCache.setCache('profile', data.profile)
+
     // 登录后拿到用户信息
-    getUserAccountAction(result.data.account.id, cookie)
+    getUserAccountAction(data.account.id, cookie)
     // 用户已经登录过了
-    if (result.data.account.id !== 8023474819) {
-      console.log('登录了')
+    if (data.code == 200) {
+      // 用户歌单列表
+      const res = await getUserPlayList(data.account.id)
+      userplaylist.value = res.playlist
+      localCache.setCache('userplaylist', res.playlist)
+
       isStatus.value = true
       localCache.setCache('isStatus', true)
     } else {
@@ -105,17 +121,14 @@ export const useLoginStore = defineStore('login', () => {
   }
   // 获取用户信息
   async function getUserAccountAction(id: number, cookie: string) {
-    const result = await getUserAccount(cookie)
-    // 用户信息
-    localCache.setCache('account', result.account)
-    account.value = result.account
-    // 用户详细信息
-    const result2 = await getUserInfo(id)
-    localCache.setCache('profile', result.profile)
-    profile.value = result2.profile
-
-    const result3 = await getUserPlayList(id)
-    console.log(result3)
+    // const result = await getUserAccount(cookie)
+    // // 用户信息
+    // localCache.setCache('account', result.account)
+    // account.value = result.account
+    // // 用户详细信息
+    // const result2 = await getUserInfo(id)
+    // localCache.setCache('profile', result.profile)
+    // profile.value = result2.profile
   }
 
   // 发送验证码
@@ -152,9 +165,12 @@ export const useLoginStore = defineStore('login', () => {
   return {
     qrimg,
     stopTimer,
+    account,
+    profile,
     inspect,
     expireQr,
     isStatus,
+    userplaylist,
     isDialogTableVisible,
     changeIsStatus,
     getLoginQrKeyAction,

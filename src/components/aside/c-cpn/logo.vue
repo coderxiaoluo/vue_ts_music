@@ -33,7 +33,9 @@ const { isFold } = storeToRefs(settingStore)
   }
   h1 {
     font-size: 20px;
-    color: var(--music-bgc-primary);
+    // color: var(--music-aside-bgc);
+    color: #ffffff;
+
     font-weight: 900;
   }
 }

@@ -6,3 +6,10 @@ export function getBannerData() {
     url: '/banner?type=0'
   })
 }
+
+// 推荐歌单
+export function getRelatedDataList(limit: number = 20) {
+  return lRequest.get({
+    url: `/personalized?limit=${limit}`
+  })
+}

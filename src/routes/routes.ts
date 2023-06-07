@@ -53,7 +53,7 @@ export const routes = [
         ]
       },
       {
-        path: '/video',
+        path: '/findmusic/video',
         name: 'Video',
         component: () => import('../views/home/video/video.vue')
       }

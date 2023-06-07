@@ -1,5 +1,6 @@
 {
   "files": [],
+  "compilerOptions": {},
   "references": [
     {
       "path": "./tsconfig.node.json"

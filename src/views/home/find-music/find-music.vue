@@ -21,15 +21,18 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { TabsPaneContext } from 'element-plus'
+import { localCache } from '@/utils/localCache'
 
-const activeName = ref('/findmusic/recommend')
+const activeName = ref(localCache.getCache('tabPath') ?? '/findmusic/recommend')
 
 // 切换路由
 const router = useRouter()
 const handleClick = (tab: any, event: Event) => {
   const path = tab.props.name
+  localCache.setCache('tabPath', path)
   router.push({ path })
 }
+// 路由持久化
 </script>
 
 <style lang="less" scoped>

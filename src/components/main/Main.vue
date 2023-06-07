@@ -3,13 +3,28 @@
     <!-- 路由 -->
     <router-view v-slot="{ Component }">
       <transition name="fade">
-        <component :is="Component" />
+        <component :is="Component" v-if="isRefresh" />
       </transition>
     </router-view>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { watch, nextTick } from 'vue'
+// 拿到store
+import { useSettingStore } from '@/stores/setting'
+import { storeToRefs } from 'pinia'
+
+// 判断侧边栏展开
+const settingStore = useSettingStore()
+const { isRefresh } = storeToRefs(settingStore)
+// 刷新
+watch(isRefresh, () => {
+  nextTick(() => {
+    isRefresh.value = true
+  })
+})
+</script>
 
 <style lang="less" scoped>
 .main {
