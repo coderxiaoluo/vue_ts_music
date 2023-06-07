@@ -1,23 +1,8 @@
 <template>
   <!-- 用户信息 -->
   <div class="user-info">
-    <template v-if="isStatus">
-      <el-avatar :src="profile.avatarUrl" />
-      <!-- 登录后展示 -->
-      <el-dropdown class="dropdown">
-        <span class="el-dropdown-link">
-          {{ profile.nickname }}
-          <el-icon class="el-icon--right">
-            <arrow-down />
-          </el-icon>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="exitUserClick">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </template>
+    <!-- 用户信息 -->
+    <SuccessUser :profile="profile" v-if="isStatus" @emitExitUserClick="emitHandleClick" />
     <!-- 登录 -->
     <template v-else>
       <el-button plain class="loginBtn" round @click="onLoginClick">登录</el-button>
@@ -73,10 +58,9 @@
 import { reactive, ref, watch } from 'vue'
 import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
-// import { localCache } from '@/utils/localCache'
+import SuccessUser from './success-user.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { localCache } from '@/utils/localCache'
-// import Login from '@/components/login/login.vue'
 // 获取store
 const loginStore = useLoginStore()
 
@@ -166,9 +150,27 @@ const expireQrClick = () => {
 }
 
 // 退出登录
-const exitUserClick = () => {
+const emitHandleClick = () => {
   // loginStore.changeIsStatus()
-  loginStore.getExitLogoutAction()
+  console.log(123)
+  ElMessageBox.confirm('是否确认退出?', 'Warning', {
+    confirmButtonText: '退出',
+    cancelButtonText: '否',
+    type: 'warning'
+  })
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: '取消退出'
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '退出成功'
+      })
+      loginStore.getExitLogoutAction()
+    })
 }
 </script>
 
@@ -177,15 +179,6 @@ const exitUserClick = () => {
   display: flex;
   align-items: center;
 
-  .el-avatar {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-
-    .dropdown {
-      color: #ffffff;
-    }
-  }
   .loginBtn {
     width: 100px;
     color: #ffffff;

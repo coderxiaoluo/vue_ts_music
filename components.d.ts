@@ -48,6 +48,7 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SongList: typeof import('./src/components/song-list/song-list.vue')['default']
     SongLists: typeof import('./src/components/song-list/song-lists.vue')['default']
+    SuccessUser: typeof import('./src/components/header/c-cpn/user-info/success-user.vue')['default']
     UserInfo: typeof import('./src/components/header/c-cpn/user-info/user-info.vue')['default']
   }
 }

@@ -1,8 +1,5 @@
 <template>
-  <div class="video">
-    vdieo
-    <!-- <router-view></router-view> -->
-  </div>
+  <div class="user">123</div>
 </template>
 
 <script setup lang="ts"></script>

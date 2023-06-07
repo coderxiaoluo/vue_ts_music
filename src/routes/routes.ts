@@ -1,20 +1,14 @@
-import type { RouteRecordRaw } from 'vue-router'
+// import type { RouteRecordRaw } from 'vue-router'
 export const routes = [
   {
     path: '/',
-    component: () => import('../views/home/home.vue'),
-    // redirect: '/findmusic',
+    component: () => import('@/views/home/home.vue'),
     redirect: '/findmusic/recommend',
     children: [
       {
         path: '/findmusic',
         name: 'Find',
         component: () => import('../views/home/find-music/find-music.vue')
-      },
-      {
-        path: '/video',
-        name: 'Video',
-        component: () => import('../views/home/video/video.vue')
       }
     ]
   },
@@ -51,29 +45,38 @@ export const routes = [
             component: () => import('../views/home/find-music/singer/singer.vue')
           }
         ]
-      },
+      }
+    ]
+  },
+  // 二级路由
+  // video
+  {
+    name: 'Video',
+    path: '/video',
+    component: () => import('@/views/home/home.vue'),
+    redirect: '/video/videos',
+    children: [
       {
-        path: '/findmusic/video',
-        name: 'Video',
-        component: () => import('../views/home/video/video.vue')
+        path: '/video/videos',
+        name: 'Videos',
+        component: () => import('@/views/home/video/video.vue')
       }
     ]
   },
 
-  // 登录后查看
-  // {
-  //   name: 'create',
-  //   path: '/create',
-  //   component: () => import('../views/home/home.vue'),
-  //   redirect: '/create/me',
-  //   children: [
-  //     {
-  //       path: '/create/me',
-  //       name:"Me",
-  //       component:() => import("")
-  //     }
-  //   ]
-  // },
+  // 用户路由
+  {
+    path: '/user/:id',
+    name: 'User',
+    component: () => import('@/views/home/home.vue'),
+    redirect: '/user/:id',
+    children: [
+      {
+        path: '/user/:id',
+        component: () => import('@/views/home/user/user.vue')
+      }
+    ]
+  },
   {
     name: 'notfound',
     path: '/:pathMatch(.*)',

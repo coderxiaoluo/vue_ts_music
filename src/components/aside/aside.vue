@@ -14,17 +14,32 @@
         <el-icon><User /></el-icon>
         <span>发现音乐</span>
       </el-menu-item>
-      <el-menu-item index="/findmusic/video">
+      <el-menu-item index="/video">
         <el-icon><VideoPlay /></el-icon>
         <span>视频</span>
       </el-menu-item>
-      <el-sub-menu index="/findmusic/recommend">
-        <template #title>
-          <el-icon><location /></el-icon>
-          <span>创建的歌单</span>
-        </template>
-        <el-menu-item index="3-1">item one</el-menu-item>
-      </el-sub-menu>
+      <!-- 登录才显示 -->
+      <template v-if="isStatus">
+        <el-sub-menu index="/findmusic/recommend">
+          <template #title>
+            <el-icon><location /></el-icon>
+            <span>我的歌单</span>
+          </template>
+          <el-menu-item index="3-1"> 我喜欢的歌单 </el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="/findmusic/recommend">
+          <template #title>
+            <el-icon><location /></el-icon>
+            <span>创建的歌单</span>
+          </template>
+          <el-menu-item index="3-1">
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>12123123</span>
+            </template>
+          </el-menu-item>
+        </el-sub-menu>
+      </template>
     </el-menu>
   </div>
 </template>
@@ -33,9 +48,15 @@
 import Logo from './c-cpn/logo.vue'
 import { useRoute } from 'vue-router'
 import { useSettingStore } from '@/stores/setting'
+import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
 import { localCache } from '@/utils/localCache'
+// 获取store
+const loginStore = useLoginStore()
+
+// 判断是否登录了
+const { isStatus } = storeToRefs(loginStore)
 
 const settingStore = useSettingStore()
 // 折叠变量
@@ -46,7 +67,7 @@ const onChangeClick = (v: any) => {
 }
 
 // router持久化
-const defaultRoute = ref(localCache.getCache('menuPath') ?? '/findmusic/recommend')
+const defaultRoute = ref(localCache.getCache('menuPath') ?? '/findmusic')
 const route = useRoute()
 watch(route, (newVal) => {
   localCache.setCache('menuPath', newVal.path)
