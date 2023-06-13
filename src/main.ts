@@ -12,6 +12,9 @@ import 'element-plus/theme-chalk/el-message.css'
 import 'animate.css'
 import 'animate.css/animate.compat.css'
 
+// icon
+import './assets/icon'
+
 // Import Swiper styles
 // Import Swiper styles
 import 'swiper/css'

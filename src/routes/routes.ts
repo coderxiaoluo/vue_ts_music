@@ -71,8 +71,8 @@ export const routes = [
     children: [
       {
         path: '/musicdetail/:id',
-        name: 'Videos',
-        component: () => import('@/views/home/video/video.vue')
+        name: 'MusicDetails',
+        component: () => import('@/views/home/musicdetail/music-detail.vue')
       }
     ]
   },

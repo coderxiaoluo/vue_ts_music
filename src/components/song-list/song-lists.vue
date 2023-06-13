@@ -6,34 +6,36 @@
     </div>
     <template v-if="isRender">
       <div class="content">
-        <el-row :gutter="40">
-          <template v-for="item in songList" :key="item.id">
-            <el-col :xs="24" :sm="24" :md="8" :lg="6">
-              <div class="img-box">
-                <img :src="item.picUrl" alt="" loading="lazy" />
-                <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
-              </div>
-              <p class="desc">{{ item.name }}</p>
-            </el-col>
-          </template>
-        </el-row>
+        <template v-for="item in songList" :key="item.id">
+          <div @click="onMusicDetailClick(item)" class="music-list">
+            <div class="img-item">
+              <img :src="item.picUrl" alt="" loading="lazy" />
+              <svg class="icon play-icon" aria-hidden="true">
+                <use xlink:href="#icon-bofang2"></use>
+              </svg>
+            </div>
+            <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
+            <p class="desc">{{ item.name }}</p>
+          </div>
+        </template>
       </div>
     </template>
 
     <template v-else>
       <div class="content">
-        <el-row :gutter="40">
-          <template v-for="item in songList" :key="item.id">
-            <el-col :xs="24" :sm="24" :md="8" :lg="6">
-              <div class="img-box">
-                <img :src="item.coverImgUrl" alt="" loading="lazy" />
-                <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
-                <p class="nickname">{{ item.creator.nickname }}</p>
-              </div>
-              <p class="desc">{{ item.name }}</p>
-            </el-col>
-          </template>
-        </el-row>
+        <template v-for="item in songList" :key="item.id">
+          <div @click="onMusicDetailClick(item)" class="music-list">
+            <div class="img-item">
+              <img :src="item.coverImgUrl" alt="" loading="lazy" />
+              <svg class="icon play-icon" aria-hidden="true">
+                <use xlink:href="#icon-bofang2"></use>
+              </svg>
+            </div>
+            <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
+            <p class="nickname">{{ item.creator.nickname }}</p>
+            <p class="desc">{{ item.name }}</p>
+          </div>
+        </template>
       </div>
     </template>
   </div>
@@ -43,7 +45,7 @@
 import { useRouter } from 'vue-router'
 import { formatePayCount } from '@/utils/formatplay'
 
-defineProps({
+const props = defineProps({
   songList: {
     type: Object,
     default: () => {
@@ -63,9 +65,17 @@ defineProps({
     }
   }
 })
+console.log(props.songList)
+// 去到详情页
+const router = useRouter()
+
+const onMusicDetailClick = (v: any) => {
+  router.push({
+    path: `/musicdetail/${v.id}`
+  })
+}
 
 // 跳转更多
-const router = useRouter()
 const handleRouteCLick = () => {
   router.push('/findmusic/musiclist')
 }
@@ -77,6 +87,7 @@ const handleRouteCLick = () => {
   .title {
     display: flex;
     align-items: center;
+    margin-bottom: 20px;
     p {
       font-size: 20px;
       font-weight: 900;
@@ -86,47 +97,69 @@ const handleRouteCLick = () => {
   }
 
   .content {
-    margin-top: 20px;
-    .el-row {
-      justify-content: flex-start;
-      .el-col {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .music-list {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      width: 200px;
+      height: 250px;
+      margin: 10px;
+      transition: all 0.5s;
+      cursor: pointer;
+      &:hover.play-icon {
+        display: block;
       }
-      .img-box {
-        position: relative;
-        margin-top: 20px;
-        width: 75%;
+
+      .img-item {
+        width: 100%;
+        height: 75%;
         color: var(--music-recommend-song-text);
         overflow: hidden;
+        transition: all 0.3s;
+
+        img {
+          width: 100%;
+          height: 100%;
+          transition: all 0.3s;
+        }
+
+        .play-icon {
+          position: absolute;
+          left: 35%;
+          top: 25%;
+          width: 50px;
+          height: 50px;
+          border-radius: 10px;
+          background-color: #ffffff;
+          display: none;
+          transition: all 0.5s;
+        }
         &:hover img {
           transform: scale(1.1);
         }
-        img {
-          width: 100%;
-          height: 215px;
-          cursor: pointer;
-          transition: transform 0.5s;
+        &:hover .play-icon {
+          display: block;
         }
-        .playcount {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          color: #ffffff;
-          font-size: 12px;
-        }
-        .nickname {
-          position: absolute;
-          bottom: 10px;
-          left: 10px;
-          color: #ffffff;
-          font-size: 12px;
-        }
+      }
+      .playcount {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #ffffff;
+        font-size: 12px;
+      }
+      .nickname {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: #ffffff;
+        font-size: 12px;
       }
       .desc {
         margin-top: 10px;
-        width: 77%;
         color: var(--music-recommend-song-text);
       }
     }

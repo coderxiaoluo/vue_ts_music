@@ -72,7 +72,7 @@ const { isStatus, userplaylist } = storeToRefs(loginStore)
 const settingStore = useSettingStore()
 // 折叠变量
 const { isFold } = storeToRefs(settingStore)
-console.log(userplaylist)
+// console.log(userplaylist)
 
 // router持久化
 const defaultRoute = ref(localCache.getCache('menuPath') ?? '/findmusic')
