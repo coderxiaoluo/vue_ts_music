@@ -18,6 +18,7 @@ import 'swiper/css'
 
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
+import axios from 'axios'
 
 // store
 import store from './stores'
@@ -31,6 +32,13 @@ const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
+// axios({
+//   method: 'get',
+//   // http://api.map.baidu.com/reverse_geocoding/v3/?ak=你的AK&output=json&coordtype=wgs84ll&location=31.225696,121.49884
+//   url: 'reverse_geocoding/v3/?ak=7ejPjXA5vblz2PFSv3fRXTEGlvLN32sy&output=json&coordtype=wgs84ll&location=31.225696,121.49884'
+// }).then((res) => {
+//   console.log(res)
+// })
 app.use(store)
 app.use(router)
 app.mount('#app')

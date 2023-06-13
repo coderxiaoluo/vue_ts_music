@@ -3,44 +3,56 @@
     <!-- 左侧顶部 logo 以及 标题 -->
     <Logo></Logo>
     <!-- menu -->
-    <el-menu
-      :collapse="isFold"
-      router
-      :default-active="defaultRoute"
-      class="menu"
-      @select="onChangeClick"
-    >
-      <el-menu-item index="/findmusic/recommend">
-        <el-icon><User /></el-icon>
-        <span>发现音乐</span>
-      </el-menu-item>
-      <el-menu-item index="/video">
-        <el-icon><VideoPlay /></el-icon>
-        <span>视频</span>
-      </el-menu-item>
-      <!-- 登录才显示 -->
-      <template v-if="isStatus">
-        <el-sub-menu index="/findmusic/recommend">
-          <template #title>
-            <el-icon><location /></el-icon>
-            <span>我的歌单</span>
-          </template>
-          <el-menu-item index="3-1"> 我喜欢的歌单 </el-menu-item>
-        </el-sub-menu>
-        <el-sub-menu index="/findmusic/recommend">
-          <template #title>
-            <el-icon><location /></el-icon>
-            <span>创建的歌单</span>
-          </template>
-          <el-menu-item index="3-1">
+    <el-scrollbar>
+      <el-menu
+        @open="handleOpen"
+        @close="handleClose"
+        :collapse="isFold"
+        router
+        :default-active="defaultRoute"
+        class="menu"
+      >
+        <el-menu-item index="/findmusic/recommend">
+          <el-icon><User /></el-icon>
+          <span> <el-text class="w-100px" truncated>发现音乐</el-text></span>
+        </el-menu-item>
+        <el-menu-item index="/video">
+          <el-icon><VideoPlay /></el-icon>
+          <span>视频</span>
+        </el-menu-item>
+        <!-- 登录才显示 -->
+        <template v-if="isStatus">
+          <el-sub-menu index="2">
             <template #title>
               <el-icon><location /></el-icon>
-              <span>12123123</span>
+              <span>我的歌单</span>
             </template>
-          </el-menu-item>
-        </el-sub-menu>
-      </template>
-    </el-menu>
+            <template v-for="item in userplaylist" :key="item.id">
+              <el-menu-item
+                @click="onHandleClick"
+                :index="'/musicdetail/' + String(item.id)"
+                v-if="item.creator.djStatus === 0"
+                ><el-text class="w-100px" truncated>{{ item.name }}</el-text>
+              </el-menu-item>
+            </template>
+          </el-sub-menu>
+          <el-sub-menu index="3">
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>创建的歌单</span>
+            </template>
+
+            <template v-for="item in userplaylist" :key="item.id">
+              <el-menu-item
+                :index="'/musicdetail/' + String(item.id)"
+                v-if="item.creator.djStatus === 10"
+                ><el-text class="w-100px" truncated>{{ item.name }}</el-text>
+              </el-menu-item>
+            </template>
+          </el-sub-menu>
+        </template>
+      </el-menu>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -55,16 +67,12 @@ import { localCache } from '@/utils/localCache'
 // 获取store
 const loginStore = useLoginStore()
 
-// 判断是否登录了
-const { isStatus } = storeToRefs(loginStore)
-
+// 判断是否登录了  / 歌单列表
+const { isStatus, userplaylist } = storeToRefs(loginStore)
 const settingStore = useSettingStore()
 // 折叠变量
 const { isFold } = storeToRefs(settingStore)
-
-const onChangeClick = (v: any) => {
-  // console.log(v)
-}
+console.log(userplaylist)
 
 // router持久化
 const defaultRoute = ref(localCache.getCache('menuPath') ?? '/findmusic')
@@ -73,6 +81,18 @@ watch(route, (newVal) => {
   localCache.setCache('menuPath', newVal.path)
   defaultRoute.value = newVal.path
 })
+
+//
+
+const handleOpen = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+const handleClose = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+const onHandleClick = () => {
+  console.log(1)
+}
 </script>
 
 <style lang="less" scoped>
@@ -85,6 +105,10 @@ watch(route, (newVal) => {
   height: calc(100vh - 60px);
   --el-menu-border-color: none;
   color: var(--music-search-color);
+}
+
+.el-scrollbar {
+  height: calc(100vh - 60px);
 }
 
 .el-menu-item {

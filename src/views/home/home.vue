@@ -2,9 +2,11 @@
   <div class="home">
     <el-container>
       <!-- 侧边栏组件 -->
-      <el-aside :width="isFold ? '60px' : '200px'">
+
+      <el-aside :width="isFold ? '60px' : '220px'">
         <Aside></Aside>
       </el-aside>
+
       <el-container>
         <el-header>
           <!-- 顶部组件 -->
@@ -56,6 +58,7 @@ recommendStore.getRelatedDataListAction()
     padding: 0;
     background-color: var(--music-bgc-primary);
   }
+
   // 侧边栏
   .el-aside {
     height: 100%;

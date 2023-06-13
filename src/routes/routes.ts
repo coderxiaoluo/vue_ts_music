@@ -32,7 +32,7 @@ export const routes = [
           {
             path: '/findmusic/musiclist',
             name: 'Musiclist',
-            component: () => import('../views/home/find-music/musiclist/musiclist.vue')
+            component: () => import('../views/home/find-music/musiclist/music-list.vue')
           },
           {
             path: '/findmusic/ranking',
@@ -58,6 +58,19 @@ export const routes = [
     children: [
       {
         path: '/video/videos',
+        name: 'Videos',
+        component: () => import('@/views/home/video/video.vue')
+      }
+    ]
+  },
+  {
+    name: 'MusicDetail',
+    path: '/musicdetail/:id',
+    component: () => import('@/views/home/home.vue'),
+    redirect: '/musicdetail/:id',
+    children: [
+      {
+        path: '/musicdetail/:id',
         name: 'Videos',
         component: () => import('@/views/home/video/video.vue')
       }

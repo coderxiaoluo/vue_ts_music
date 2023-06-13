@@ -36,6 +36,8 @@ const handleClick = (tab: any, event: Event) => {
 </script>
 
 <style lang="less" scoped>
+.find-music {
+}
 :deep(.el-tabs__nav-wrap::after) {
   height: 0;
 }

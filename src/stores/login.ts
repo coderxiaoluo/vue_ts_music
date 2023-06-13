@@ -34,7 +34,7 @@ export const useLoginStore = defineStore('login', () => {
   const profile = ref<any>(localCache.getCache('profile') ?? {})
 
   //  歌单
-  const userplaylist = ref()
+  const userplaylist = ref(localCache.getCache('userplaylist') ?? [])
   // 二维码 key 生成接口
   async function getLoginQrKeyAction() {
     const result = await getLoginQrKey()

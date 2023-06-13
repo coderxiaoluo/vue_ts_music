@@ -7,7 +7,7 @@
     <template v-else>
       <el-button plain class="loginBtn" round @click="onLoginClick">登录</el-button>
     </template>
-    <!-- 登录+++++++++++++++++++++++++++++++++++++=  -->
+    <!-- 登录 -->
     <div class="login">
       <el-dialog
         @click="onCloseClick"

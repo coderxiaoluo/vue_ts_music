@@ -1,6 +1,6 @@
 <template>
   <div class="success-user">
-    <el-avatar :src="profile.avatarUrl" />
+    <el-avatar @click="onHeadelUserClick" :src="profile.avatarUrl" />
     <!-- 登录后展示 -->
     <el-dropdown class="dropdown">
       <span class="el-dropdown-link">
@@ -19,7 +19,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { useRouter } from 'vue-router'
+// props
+const props = defineProps({
   profile: {
     type: Object,
     default: () => {
@@ -27,10 +29,17 @@ defineProps({
     }
   }
 })
-
+// emit
 const emits = defineEmits(['emitExitUserClick'])
 const exitUserClick = () => {
   emits('emitExitUserClick')
+}
+// 去到个人页
+const router = useRouter()
+const onHeadelUserClick = () => {
+  router.push({
+    path: `/user/${props.profile.userId}`
+  })
 }
 </script>
 
@@ -42,7 +51,7 @@ const exitUserClick = () => {
     width: 30px;
     height: 30px;
     margin-right: 10px;
-
+    cursor: pointer;
     .dropdown {
       color: #ffffff;
     }
