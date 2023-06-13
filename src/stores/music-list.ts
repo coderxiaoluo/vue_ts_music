@@ -11,6 +11,10 @@ export const useMusicListStore = defineStore('music-list', () => {
   const tagAll = ref([])
   // 右侧十个tag
   const rightTag = ref([])
+  // 歌单列表
+  const playLists = ref([])
+  // 总条数
+  const total = ref(0)
   // 左侧全部歌单tag
   const getCatListDataAction = async () => {
     const result = await getCatListData()
@@ -27,14 +31,23 @@ export const useMusicListStore = defineStore('music-list', () => {
   //   console.log(result)
   // }
   //  精品歌单标签列表
-  const getBoutiqueDataListAction = async () => {
-    const result = await getBoutiqueDataList()
-    console.log(result)
+  const getBoutiqueDataListAction = async (
+    cat?: string,
+    limit?: string | number,
+    offset?: number
+  ) => {
+    const result = await getBoutiqueDataList(cat, limit, offset)
+    // more
+    // console.log(result)
+    total.value = result.total
+    playLists.value = result.playlists
   }
 
   return {
     tagAll,
     rightTag,
+    playLists,
+    total,
     getCatListDataAction,
     getHotPlayListDataAction,
     getBoutiqueDataListAction

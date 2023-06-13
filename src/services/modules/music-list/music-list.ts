@@ -20,8 +20,15 @@ export function getHotPlayListData() {
 //     url: '/playlist/highquality/tags'
 //   })
 // }
-export function getBoutiqueDataList(cat = '华语') {
+
+export function getBoutiqueDataList(
+  cat: string = '全部',
+  limit: string | number = 100,
+  offset: number = 100
+) {
+  console.log(offset)
+
   return lRequest.get({
-    url: `/top/playlist/highquality?cat=${cat}`
+    url: `/top/playlist?limit=${limit}&order=cat&cat=${cat}&offset=${offset}`
   })
 }

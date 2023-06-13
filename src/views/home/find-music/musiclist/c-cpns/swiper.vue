@@ -58,7 +58,7 @@ const modules = ref([EffectCreative, Autoplay])
 
 <style lang="less" scoped>
 .swiper {
-  width: 98%;
+  width: 100%;
 }
 .swiper-slide {
   text-align: center;

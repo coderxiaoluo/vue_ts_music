@@ -17,7 +17,7 @@ import { storeToRefs } from 'pinia'
 const musiclistStore = useMusicListStore()
 // 获取全部歌单tags 左侧
 musiclistStore.getCatListDataAction()
-// musiclistStore.getBoutiqueDataListAction()
+// 获取右侧tags
 musiclistStore.getHotPlayListDataAction()
 
 const { tagAll, rightTag } = storeToRefs(musiclistStore)
@@ -26,7 +26,7 @@ const { tagAll, rightTag } = storeToRefs(musiclistStore)
 <style lang="less" scoped>
 .musiclist {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   // background: url('@/assets/img/dm3.png') no-repeat 20% 100%/ 100% 100%;
 }
 </style>

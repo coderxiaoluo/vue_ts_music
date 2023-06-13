@@ -3,7 +3,7 @@
     <!-- 轮播图 -->
     <Swiper />
     <!-- 推荐歌单 -->
-    <SongLists :songList="songList" />
+    <SongLists :songList="songList" :isRender="true" :isTitle="true" />
   </div>
 </template>
 

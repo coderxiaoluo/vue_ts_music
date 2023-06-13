@@ -1,22 +1,41 @@
 <template>
   <div class="song-list">
-    <div class="title">
+    <div v-if="isTitle" class="title">
       <p @click="handleRouteCLick">推荐歌单</p>
       <el-icon><ArrowRightBold /></el-icon>
     </div>
-    <div class="content">
-      <el-row :gutter="40">
-        <template v-for="item in songList" :key="item.id">
-          <el-col :xs="24" :sm="24" :md="8" :lg="6">
-            <div class="img-box">
-              <img :src="item.picUrl" alt="" loading="lazy" />
-              <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
-            </div>
-            <p class="desc">{{ item.name }}</p>
-          </el-col>
-        </template>
-      </el-row>
-    </div>
+    <template v-if="isRender">
+      <div class="content">
+        <el-row :gutter="40">
+          <template v-for="item in songList" :key="item.id">
+            <el-col :xs="24" :sm="24" :md="8" :lg="6">
+              <div class="img-box">
+                <img :src="item.picUrl" alt="" loading="lazy" />
+                <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
+              </div>
+              <p class="desc">{{ item.name }}</p>
+            </el-col>
+          </template>
+        </el-row>
+      </div>
+    </template>
+
+    <template v-else>
+      <div class="content">
+        <el-row :gutter="40">
+          <template v-for="item in songList" :key="item.id">
+            <el-col :xs="24" :sm="24" :md="8" :lg="6">
+              <div class="img-box">
+                <img :src="item.coverImgUrl" alt="" loading="lazy" />
+                <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
+                <p class="nickname">{{ item.creator.nickname }}</p>
+              </div>
+              <p class="desc">{{ item.name }}</p>
+            </el-col>
+          </template>
+        </el-row>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -29,6 +48,18 @@ defineProps({
     type: Object,
     default: () => {
       return []
+    }
+  },
+  isTitle: {
+    type: Boolean,
+    default: () => {
+      return false
+    }
+  },
+  isRender: {
+    type: Boolean,
+    default: () => {
+      return false
     }
   }
 })
@@ -82,6 +113,13 @@ const handleRouteCLick = () => {
           position: absolute;
           top: 10px;
           right: 10px;
+          color: #ffffff;
+          font-size: 12px;
+        }
+        .nickname {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
           color: #ffffff;
           font-size: 12px;
         }
