@@ -31,7 +31,7 @@ watch(isRefresh, () => {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  background-color: #f5f8ff;
+  // background-color: #e8e0e0;
   padding: 20px;
 }
 

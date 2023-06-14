@@ -4,6 +4,7 @@
       :grabCursor="true"
       :effect="'creative'"
       :freeMode="true"
+      :navigation="true"
       :autoplay="{
         delay: 2800,
         disableOnInteraction: true
@@ -52,13 +53,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { EffectCreative, Autoplay } from 'swiper'
-const modules = ref([EffectCreative, Autoplay])
+import { EffectCreative, Autoplay, Navigation } from 'swiper'
+const modules = ref([EffectCreative, Autoplay, Navigation])
 </script>
 
 <style lang="less" scoped>
 .swiper {
   width: 100%;
+  .swiper-button-next:after,
+  .swiper-button-prev:after {
+    color: red;
+    --swiper-theme-color: red;
+    --swiper-navigation-color: red;
+  }
 }
 .swiper-slide {
   text-align: center;

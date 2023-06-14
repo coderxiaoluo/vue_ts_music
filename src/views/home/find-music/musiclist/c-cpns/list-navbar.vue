@@ -118,6 +118,8 @@ const currentChangeClick = (v: number) => {
 
 <style lang="less" scoped>
 .nav-bar {
+  width: 100%;
+  height: 100%;
   .header-top {
     margin: 20px 0;
     display: flex;

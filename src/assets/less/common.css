@@ -1,3 +1,6 @@
+:root {
+  --el-mask-color: #000000;
+}
 .icon {
   width: 1em;
   height: 1em;

@@ -13,18 +13,24 @@
         class="menu"
       >
         <el-menu-item index="/findmusic/recommend">
-          <el-icon><User /></el-icon>
+          <svg class="icon aside_video_icon" aria-hidden="true">
+            <use xlink:href="#icon-yinle"></use>
+          </svg>
           <span> <el-text class="w-100px" truncated>发现音乐</el-text></span>
         </el-menu-item>
         <el-menu-item index="/video">
-          <el-icon><VideoPlay /></el-icon>
+          <svg class="icon aside_video_icon" aria-hidden="true">
+            <use xlink:href="#icon-shipin-"></use>
+          </svg>
           <span>视频</span>
         </el-menu-item>
         <!-- 登录才显示 -->
         <template v-if="isStatus">
           <el-sub-menu index="2">
             <template #title>
-              <el-icon><location /></el-icon>
+              <svg class="icon aside_video_icon" aria-hidden="true">
+                <use xlink:href="#icon-chuangjianmulu"></use>
+              </svg>
               <span>我的歌单</span>
             </template>
             <template v-for="item in userplaylist" :key="item.id">
@@ -38,8 +44,10 @@
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <el-icon><location /></el-icon>
-              <span>创建的歌单</span>
+              <svg class="icon aside_video_icon" aria-hidden="true">
+                <use xlink:href="#icon-shoucang1"></use>
+              </svg>
+              <span>收藏的歌单</span>
             </template>
 
             <template v-for="item in userplaylist" :key="item.id">
@@ -105,6 +113,21 @@ const onHandleClick = () => {
   height: calc(100vh - 60px);
   --el-menu-border-color: none;
   color: var(--music-search-color);
+
+  .el-menu-item {
+    .aside_video_icon {
+      width: 25px;
+      height: 25px;
+      margin-right: 20px;
+    }
+  }
+  .el-sub-menu {
+    .aside_video_icon {
+      width: 25px;
+      height: 25px;
+      margin-right: 20px;
+    }
+  }
 }
 
 .el-scrollbar {

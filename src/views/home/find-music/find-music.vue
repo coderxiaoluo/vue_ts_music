@@ -36,14 +36,16 @@ const handleClick = (tab: any, event: Event) => {
 </script>
 
 <style lang="less" scoped>
-.find-music {
-}
 :deep(.el-tabs__nav-wrap::after) {
   height: 0;
 }
 
 .context {
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #f8f5f5;
+  padding: 20px;
 }
 
 .fade-enter-from {

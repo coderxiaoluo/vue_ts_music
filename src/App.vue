@@ -11,11 +11,14 @@ import WOW from 'wow.js'
 onMounted(() => {
   new WOW().init()
 })
+
+document.onselectstart = (e) => e.preventDefault()
 </script>
 
 <style lang="less" scoped>
 .app {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
+  // height: 100vh;
 }
 </style>

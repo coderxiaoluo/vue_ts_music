@@ -11,7 +11,7 @@
             <div class="img-item">
               <img :src="item.picUrl" alt="" loading="lazy" />
               <svg class="icon play-icon" aria-hidden="true">
-                <use xlink:href="#icon-bofang2"></use>
+                <use xlink:href="#icon-bofang3"></use>
               </svg>
             </div>
             <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
@@ -28,7 +28,7 @@
             <div class="img-item">
               <img :src="item.coverImgUrl" alt="" loading="lazy" />
               <svg class="icon play-icon" aria-hidden="true">
-                <use xlink:href="#icon-bofang2"></use>
+                <use xlink:href="#icon-bofang3"></use>
               </svg>
             </div>
             <p class="playcount">{{ formatePayCount(item.playCount) }}</p>
@@ -84,6 +84,8 @@ const handleRouteCLick = () => {
 <style lang="less" scoped>
 .song-list {
   margin-top: 20px;
+  height: 100%;
+  width: 100%;
   .title {
     display: flex;
     align-items: center;
@@ -107,15 +109,15 @@ const handleRouteCLick = () => {
       width: 200px;
       height: 250px;
       margin: 10px;
-      transition: all 0.5s;
       cursor: pointer;
-      &:hover.play-icon {
-        display: block;
+      &:hover .img-item .play-icon {
+        opacity: 1;
+        transform: scale(1.2);
       }
 
       .img-item {
         width: 100%;
-        height: 75%;
+        height: 80%;
         color: var(--music-recommend-song-text);
         overflow: hidden;
         transition: all 0.3s;
@@ -132,18 +134,16 @@ const handleRouteCLick = () => {
           top: 25%;
           width: 50px;
           height: 50px;
-          border-radius: 10px;
+          border-radius: 15px;
           background-color: #ffffff;
-          display: none;
-          transition: all 0.5s;
+          transition: all 0.5s 0.1s;
+          opacity: 0;
         }
         &:hover img {
           transform: scale(1.1);
         }
-        &:hover .play-icon {
-          display: block;
-        }
       }
+
       .playcount {
         position: absolute;
         top: 10px;
@@ -153,7 +153,7 @@ const handleRouteCLick = () => {
       }
       .nickname {
         position: absolute;
-        bottom: 10px;
+        bottom: 60px;
         left: 10px;
         color: #ffffff;
         font-size: 12px;

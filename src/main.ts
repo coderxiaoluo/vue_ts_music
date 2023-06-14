@@ -18,10 +18,10 @@ import './assets/icon'
 // Import Swiper styles
 // Import Swiper styles
 import 'swiper/css'
+import 'swiper/css/effect-cards'
 
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
-import axios from 'axios'
 
 // store
 import store from './stores'
