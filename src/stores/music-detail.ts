@@ -21,6 +21,7 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
   const getDetailsDataListAllAction = async (id: string) => {
     const result = await getDetailsDataListAll(id)
     // 歌曲详情 以及没有登录的20首音乐
+    console.log(result)
     playList.value = result.playlist
     tracksList.value = result.playlist.tracks
     LOADING.value = false

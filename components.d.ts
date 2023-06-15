@@ -10,6 +10,8 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Aside: typeof import('./src/components/aside/aside.vue')['default']
+    Comment: typeof import('./src/components/comment/comment.vue')['default']
+    CommentList: typeof import('./src/components/comment/c-cpn/comment-list.vue')['default']
     DataList: typeof import('./src/components/data-list/data-list.vue')['default']
     DateList: typeof import('./src/components/date-list/date-list.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
@@ -60,6 +62,7 @@ declare module '@vue/runtime-core' {
     SongList: typeof import('./src/components/song-list/song-list.vue')['default']
     SongLists: typeof import('./src/components/song-list/song-lists.vue')['default']
     SuccessUser: typeof import('./src/components/header/c-cpn/user-info/success-user.vue')['default']
+    TableList: typeof import('./src/components/date-list/c-cpn/table-list.vue')['default']
     UserInfo: typeof import('./src/components/header/c-cpn/user-info/user-info.vue')['default']
   }
   export interface ComponentCustomProperties {
