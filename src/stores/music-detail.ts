@@ -17,13 +17,15 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
   const tracksList = ref<any[]>([])
   // 加载中
   const LOADING = ref<boolean>(true)
+  // 未登录展示的收藏者
+  const subScriber = ref<any[]>([])
   // 没有登录调用这个
   const getDetailsDataListAllAction = async (id: string) => {
     const result = await getDetailsDataListAll(id)
     // 歌曲详情 以及没有登录的20首音乐
-    console.log(result)
     playList.value = result.playlist
     tracksList.value = result.playlist.tracks
+    subScriber.value = result.playlist.subscribers
     LOADING.value = false
   }
 
@@ -39,6 +41,7 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
     playList,
     songsAll,
     tracksList,
+    subScriber,
     LOADING,
     getDetailsDataListAllAction,
     getTrackAllDataAction

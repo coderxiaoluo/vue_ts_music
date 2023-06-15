@@ -27,8 +27,8 @@
             </div>
             <div class="buttons">
               <!-- 点赞 -->
-              <div @click="handleLikeClick" class="like item">
-                <svg class="icon icon_like" aria-hidden="true">
+              <div @click="handleLikeClick(item)" class="like item">
+                <svg ref="svgLike" class="icon" aria-hidden="true">
                   <use xlink:href="#icon-dianzan"></use>
                   <!-- <use xlink:href="#icon-dianzan1"></use> -->
                 </svg>
@@ -41,7 +41,7 @@
                   <use xlink:href="#icon-fenxiang"></use>
                 </svg>
               </div>
-              <div class="reply item">
+              <div @click="handleShareClick(item)" class="reply item">
                 <svg class="icon icon_share" aria-hidden="true">
                   <use xlink:href="#icon-huifu"></use>
                 </svg>
@@ -55,6 +55,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useLoginStore } from '@/stores/login'
+import { useRoute } from 'vue-router'
+import { useCommentStore } from '@/stores/comment'
+import { ElMessage } from 'element-plus'
+
 defineProps({
   commentList: {
     type: Object,
@@ -67,9 +74,36 @@ defineProps({
     default: '评论'
   }
 })
+const emits = defineEmits(['textareaEmits'])
 
-// 点赞
-const handleLikeClick = () => {}
+const loginStore = useLoginStore()
+const commentStore = useCommentStore()
+// 获取是否登录
+const { isStatus } = storeToRefs(loginStore)
+
+const { isLike } = storeToRefs(commentStore)
+
+const route = useRoute()
+const musicId = ref<any>(route.params.id)
+
+// 点赞   必须要用户登录才能点赞
+const handleLikeClick = async (v: any) => {
+  if (isStatus.value) {
+    // 登录了
+    const res = await commentStore.likeCommentIsShowAction(v.commentId, musicId.value, 1)
+    ElMessage({
+      message: '点赞成功',
+      type: 'success'
+    })
+  } else {
+    // 未登录
+  }
+}
+
+// 回复
+const handleShareClick = async (v: any) => {
+  emits('textareaEmits', v.user)
+}
 </script>
 
 <style lang="less" scoped>
@@ -147,10 +181,14 @@ const handleLikeClick = () => {}
             width: 100%;
             height: 100%;
           }
+          .iconLike {
+            background-color: red;
+          }
           .like-num {
             font-size: 12px;
             padding-top: 2px;
           }
+
           .item {
             width: 15px;
             height: 15px;

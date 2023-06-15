@@ -10,6 +10,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Aside: typeof import('./src/components/aside/aside.vue')['default']
+    Collect: typeof import('./src/components/collect/collect.vue')['default']
     Comment: typeof import('./src/components/comment/comment.vue')['default']
     CommentList: typeof import('./src/components/comment/c-cpn/comment-list.vue')['default']
     DataList: typeof import('./src/components/data-list/data-list.vue')['default']

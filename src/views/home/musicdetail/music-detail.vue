@@ -67,7 +67,9 @@
       <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="歌曲列表" name="first"> <DateList /></el-tab-pane>
         <el-tab-pane label="评论" name="second"> <Comment /> </el-tab-pane>
-        <el-tab-pane label="收藏者" name="third">收藏者</el-tab-pane>
+        <el-tab-pane label="收藏者" name="third">
+          <Collect />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
@@ -84,6 +86,8 @@ import { formatePayCount, formatMonthDay } from '@/utils/formatplay'
 import DateList from '@/components/date-list/date-list.vue'
 // 评论组件
 import Comment from '@/components/comment/comment.vue'
+// 收藏组件
+import Collect from '@/components/collect/collect.vue'
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue'
 // import required modules
@@ -111,7 +115,7 @@ if (isStatus.value) {
 }
 // 展示信息
 const { playList } = storeToRefs(musicDetailStore)
-
+console.log(playList)
 // 歌曲列表
 const activeName = ref('first')
 const handleClick = (v: any) => {
