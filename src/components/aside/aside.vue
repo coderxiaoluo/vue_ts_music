@@ -72,6 +72,8 @@ import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
 import { localCache } from '@/utils/localCache'
+import { useMusicDetailStore } from '@/stores/music-detail'
+
 // 获取store
 const loginStore = useLoginStore()
 
@@ -90,16 +92,17 @@ watch(route, (newVal) => {
   defaultRoute.value = newVal.path
 })
 
-//
-
 const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
 const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
+  // console.log(key, keyPath)
 }
+
+const { isRefresh } = storeToRefs(settingStore)
 const onHandleClick = () => {
-  console.log(1)
+  // 刷新按钮
+  isRefresh.value = false
 }
 </script>
 

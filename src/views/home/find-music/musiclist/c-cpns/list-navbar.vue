@@ -64,7 +64,7 @@ import { useMusicListStore } from '@/stores/music-list'
 import songLists from '@/components/song-list/song-lists.vue'
 
 // 父传子
-const props = defineProps({
+defineProps({
   tagAll: {
     type: Array<InterTagAll>,
     default: () => {

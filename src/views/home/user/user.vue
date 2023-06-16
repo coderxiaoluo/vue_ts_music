@@ -1,25 +1,23 @@
 <template>
   <div class="user">
-    <img :src="userProfile?.backgroundUrl" style="width: 100%; height: 300px" alt="" />
+    <div class="left">123</div>
+    <div class="right">123123123</div>
+    <img :src="userProfile.avatarUrl" alt="" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
+
 const userStore = useUserStore()
 const route = useRoute()
 
 // 获取用户id
 const userId = ref<any>(route.params.id)
 userStore.getUserInfoAction(userId.value)
-watch(route, (newValue) => {
-  const newUserId: any = newValue.params.id
-  // 获取用户详情信息
-  userStore.getUserInfoAction(newUserId)
-})
 
 const { userProfile } = storeToRefs(userStore)
 </script>
@@ -28,5 +26,11 @@ const { userProfile } = storeToRefs(userStore)
 .user {
   width: 100%;
   height: 100vh;
+}
+
+.left {
+}
+
+.right {
 }
 </style>

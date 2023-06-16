@@ -12,7 +12,7 @@ export function getUserAccount(cookie: string) {
   })
 }
 
-// 获取用户详情
+// 获取用户详情 bug
 export function getUserInfo(id: number) {
   return lRequest.get({
     url: `/user/detail?uid=${id}`

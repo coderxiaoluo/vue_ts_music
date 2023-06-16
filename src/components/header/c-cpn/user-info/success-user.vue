@@ -20,6 +20,9 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/user'
+
 // props
 const props = defineProps({
   profile: {
@@ -34,9 +37,15 @@ const emits = defineEmits(['emitExitUserClick'])
 const exitUserClick = () => {
   emits('emitExitUserClick')
 }
+
+const userStore = useUserStore()
+// 用户切换变量
+const { isShowUserInfo } = storeToRefs(userStore)
 // 去到个人页
 const router = useRouter()
 const onHeadelUserClick = () => {
+  // 跳转之前发送数据
+  userStore.getUserInfoAction(props.profile.userId)
   router.push({
     path: `/user/${props.profile.userId}`
   })

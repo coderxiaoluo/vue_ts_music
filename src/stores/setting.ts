@@ -10,7 +10,7 @@ export const useSettingStore = defineStore('setting', () => {
   function setiSFold() {
     isFold.value = !isFold.value
   }
-  // 修改折叠变量
+  // 修改刷新变量
   function setIsRefresh() {
     isRefresh.value = !isRefresh.value
   }

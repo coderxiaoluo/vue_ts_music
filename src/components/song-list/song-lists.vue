@@ -45,7 +45,7 @@
 import { useRouter } from 'vue-router'
 import { formatePayCount } from '@/utils/formatplay'
 
-const props = defineProps({
+defineProps({
   songList: {
     type: Object,
     default: () => {
@@ -65,7 +65,6 @@ const props = defineProps({
     }
   }
 })
-console.log(props.songList)
 // 去到详情页
 const router = useRouter()
 
@@ -130,7 +129,7 @@ const handleRouteCLick = () => {
 
         .play-icon {
           position: absolute;
-          left: 35%;
+          left: 38%;
           top: 25%;
           width: 50px;
           height: 50px;
