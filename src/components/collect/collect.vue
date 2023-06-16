@@ -34,15 +34,13 @@ const userStore = useUserStore()
 //  收藏者
 const { subScriber } = storeToRefs(commentStore)
 
-// 用户切换变量
-const { isShowUserInfo } = storeToRefs(userStore)
-
 const router = useRouter()
 const onUserClick = (v: any) => {
+  userStore.getUserInfoAction(v.userId)
+  userStore.userPlaylistAction(v.userId)
   router.push({
     path: `/user/${v.userId}`
   })
-  userStore.setIsShowUserInfo()
 }
 </script>
 

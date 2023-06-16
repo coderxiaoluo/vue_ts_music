@@ -33,3 +33,10 @@ export function getUserLoginIP(ip: number) {
   })
 }
 // 获取用户信息 , 歌单，收藏，mv, dj 数量
+
+//
+export function userPlaylist(uid: number) {
+  return lRequest.get({
+    url: `/user/playlist?uid=${uid}`
+  })
+}

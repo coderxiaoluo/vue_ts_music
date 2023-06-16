@@ -39,8 +39,6 @@ const exitUserClick = () => {
 }
 
 const userStore = useUserStore()
-// 用户切换变量
-const { isShowUserInfo } = storeToRefs(userStore)
 // 去到个人页
 const router = useRouter()
 const onHeadelUserClick = () => {

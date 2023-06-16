@@ -13,24 +13,31 @@
         class="menu"
       >
         <el-menu-item index="/findmusic/recommend">
-          <svg class="icon aside_video_icon" aria-hidden="true">
-            <use xlink:href="#icon-yinle"></use>
-          </svg>
-          <span> <el-text class="w-100px" truncated>发现音乐</el-text></span>
+          <el-icon>
+            <svg class="icon aside_video_icon" aria-hidden="true">
+              <use xlink:href="#icon-yinle"></use>
+            </svg>
+          </el-icon>
+
+          <span> 发现音乐</span>
         </el-menu-item>
         <el-menu-item index="/video">
-          <svg class="icon aside_video_icon" aria-hidden="true">
-            <use xlink:href="#icon-shipin-"></use>
-          </svg>
+          <el-icon>
+            <svg class="icon aside_video_icon" aria-hidden="true">
+              <use xlink:href="#icon-shipin-"></use>
+            </svg>
+          </el-icon>
           <span>视频</span>
         </el-menu-item>
         <!-- 登录才显示 -->
         <template v-if="isStatus">
           <el-sub-menu index="2">
             <template #title>
-              <svg class="icon aside_video_icon" aria-hidden="true">
-                <use xlink:href="#icon-chuangjianmulu"></use>
-              </svg>
+              <el-icon>
+                <svg class="icon aside_video_icon" aria-hidden="true">
+                  <use xlink:href="#icon-chuangjianmulu"></use>
+                </svg>
+              </el-icon>
               <span>我的歌单</span>
             </template>
             <template v-for="item in userplaylist" :key="item.id">
@@ -44,14 +51,17 @@
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
-              <svg class="icon aside_video_icon" aria-hidden="true">
-                <use xlink:href="#icon-shoucang1"></use>
-              </svg>
+              <el-icon>
+                <svg class="icon aside_video_icon" aria-hidden="true">
+                  <use xlink:href="#icon-shoucang1"></use>
+                </svg>
+              </el-icon>
               <span>收藏的歌单</span>
             </template>
 
             <template v-for="item in userplaylist" :key="item.id">
               <el-menu-item
+                @click="onHandleClick"
                 :index="'/musicdetail/' + String(item.id)"
                 v-if="item.creator.djStatus === 10"
                 ><el-text class="w-100px" truncated>{{ item.name }}</el-text>
@@ -99,10 +109,16 @@ const handleClose = (key: string, keyPath: string[]) => {
   // console.log(key, keyPath)
 }
 
+const musicId = ref<any>(route.params.id)
+
+const musicDetailStore = useMusicDetailStore()
 const { isRefresh } = storeToRefs(settingStore)
 const onHandleClick = () => {
   // 刷新按钮
   isRefresh.value = false
+
+  // musicDetailStore.getTrackAllDataAction(musicId.value)
+  // musicDetailStore.getDetailsDataListAllAction(musicId.value)
 }
 </script>
 
@@ -121,14 +137,18 @@ const onHandleClick = () => {
     .aside_video_icon {
       width: 25px;
       height: 25px;
-      margin-right: 20px;
+    }
+    span {
+      padding-left: 10px;
     }
   }
   .el-sub-menu {
     .aside_video_icon {
       width: 25px;
       height: 25px;
-      margin-right: 20px;
+    }
+    span {
+      padding-left: 10px;
     }
   }
 }

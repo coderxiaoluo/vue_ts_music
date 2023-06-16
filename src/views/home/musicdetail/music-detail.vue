@@ -110,12 +110,11 @@ if (isStatus.value) {
   musicDetailStore.getTrackAllDataAction(musicId.value)
   musicDetailStore.getDetailsDataListAllAction(musicId.value)
 } else {
-  // 没有登录 
+  // 没有登录
   musicDetailStore.getDetailsDataListAllAction(musicId.value)
 }
 // 展示信息
 const { playList } = storeToRefs(musicDetailStore)
-console.log(playList)
 // 歌曲列表
 const activeName = ref('first')
 const handleClick = (v: any) => {
