@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper">
+  <div class="swiper animate__animated animate__jackInTheBox">
     <swiper
       :grabCursor="true"
       :effect="'creative'"
@@ -26,13 +26,13 @@
       class="mySwiper3"
     >
       <swiper-slide>
-        <img src="@/assets/img/dm1.jpg" alt="" />
+        <img src="@/assets/img/dm11.jpg" alt="" />
       </swiper-slide>
       <swiper-slide>
         <img src="@/assets/img/dm2.jpg" alt="" />
       </swiper-slide>
       <swiper-slide>
-        <img src="@/assets/img/dm3.jpg" alt="" />
+        <img src="@/assets/img/dm12.jpg" alt="" />
       </swiper-slide>
       <swiper-slide>
         <img src="@/assets/img/dm4.jpg" alt="" />
@@ -42,6 +42,9 @@
       </swiper-slide>
       <swiper-slide>
         <img src="@/assets/img/dm6.jpg" alt="" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="@/assets/img/dm7.jpg" alt="" />
       </swiper-slide>
       <swiper-slide>
         <img src="@/assets/img/dm7.jpg" alt="" />

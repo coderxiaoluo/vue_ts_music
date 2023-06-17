@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend">
+  <div class="recommend animate__animated animate__lightSpeedInLeft">
     <!-- 轮播图 -->
     <Swiper />
     <!-- 推荐歌单 -->

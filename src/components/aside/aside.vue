@@ -115,10 +115,7 @@ const musicDetailStore = useMusicDetailStore()
 const { isRefresh } = storeToRefs(settingStore)
 const onHandleClick = () => {
   // 刷新按钮
-  isRefresh.value = false
-
-  // musicDetailStore.getTrackAllDataAction(musicId.value)
-  // musicDetailStore.getDetailsDataListAllAction(musicId.value)
+  // isRefresh.value = false
 }
 </script>
 
