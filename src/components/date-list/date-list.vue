@@ -17,8 +17,6 @@ const musicDetailStore = useMusicDetailStore()
 const loginStore = useLoginStore()
 // 展示信息
 const { playList, tracksList, songsAll, LOADING } = storeToRefs(musicDetailStore)
-console.log(playList)
-console.log(songsAll)
 // isStatus ：判断是否登录的变量
 const { isStatus } = storeToRefs(loginStore)
 </script>

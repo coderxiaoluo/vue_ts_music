@@ -9,7 +9,8 @@
         <template v-for="item in songList" :key="item.id">
           <div @click="onMusicDetailClick(item)" class="music-list">
             <div class="img-item">
-              <img :src="item.picUrl" alt="" loading="lazy" />
+              <img v-if="!item.coverImgUrl" :src="item.picUrl" alt="" loading="lazy" />
+              <img v-else :src="item.coverImgUrl" alt="" loading="lazy" />
               <svg class="icon play-icon" aria-hidden="true">
                 <use xlink:href="#icon-bofang3"></use>
               </svg>

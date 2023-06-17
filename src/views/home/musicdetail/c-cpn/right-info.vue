@@ -1,16 +1,16 @@
 <template>
-  <div class="right">
+  <div class="right animate__animated animate__backInRight">
     <!-- 标题 -->
     <div class="title">
       <div class="titleContent">{{ playList.name }}</div>
     </div>
     <!-- 用户信息 -->
     <div class="user">
-      <div class="userAvatar">
+      <div class="userAvatar" @click="onUserInfoClick">
         <img :src="playList?.creator?.avatarUrl" alt="头像" />
       </div>
       <div class="userName">{{ playList?.creator?.nickname }}</div>
-      <div class="createTime">{{ formatMonthDay(playList?.createTime, 'YYYY-MM-DD') }}</div>
+      <div class="createTime">{{ formatMonthDay(playList?.createTime, 'YYYY-MM-DD') }}创建</div>
     </div>
     <!-- 按钮 -->
     <div class="buttons">
@@ -46,13 +46,23 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
 import { formatePayCount, formatMonthDay } from '@/utils/formatplay'
 
 interface Props {
   playList: any
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+// 点击进入用户详情
+const router = useRouter()
+const onUserInfoClick = () => {
+  router.push({
+    path: `/user/${props.playList.userId}`
+  })
+}
 </script>
 
 <style lang="less" scoped>
@@ -79,6 +89,7 @@ defineProps<Props>()
       img {
         width: 100%;
         height: 100%;
+        cursor: pointer;
       }
     }
     .userName {
