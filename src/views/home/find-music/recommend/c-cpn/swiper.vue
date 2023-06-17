@@ -34,6 +34,8 @@ import { storeToRefs } from 'pinia'
 import { useRecommendStore } from '@/stores/recommend'
 // 引入swiper组件
 import { Autoplay, Pagination, Navigation } from 'swiper'
+
+// swiper modules
 const modules = ref([Autoplay, Pagination, Navigation])
 
 const recommendStore = useRecommendStore()

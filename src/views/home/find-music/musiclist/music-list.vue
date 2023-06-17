@@ -1,14 +1,14 @@
 <template>
   <div class="musiclist">
     <!-- 轮播图 -->
-    <Swiper />
+    <AssetsSwiper />
     <!-- musicListNavBar -->
     <ListNavbar :tagAll="tagAll" :rightTag="rightTag" />
   </div>
 </template>
 
 <script setup lang="ts">
-import Swiper from './c-cpns/swiper.vue'
+import AssetsSwiper from './c-cpns/assets-swiper.vue'
 import ListNavbar from './c-cpns/list-navbar.vue'
 import { useMusicListStore } from '@/stores/music-list'
 import { storeToRefs } from 'pinia'
