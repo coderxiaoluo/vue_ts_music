@@ -1,6 +1,9 @@
 // 封装 axios
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import NProgress from 'nprogress'
+// 引入对应css样式
+import 'nprogress/nprogress.css'
 
 interface LInstanceInterceptors<T = AxiosResponse> {
   requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig
@@ -22,9 +25,11 @@ class LRequest {
     this.instance.interceptors.request.use(
       (config) => {
         // console.log('全局请求成功拦截')
+        NProgress.start()
         return config
       },
       (err) => {
+        NProgress.start()
         return err
       }
     )
@@ -32,10 +37,12 @@ class LRequest {
     this.instance.interceptors.response.use(
       (res) => {
         // console.log('全局响应成功拦截')
+        NProgress.done()
         return res.data
       },
       (err) => {
         // console.log('全局响应失败拦截')
+        NProgress.done()
         return err
       }
     )

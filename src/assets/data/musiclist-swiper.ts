@@ -2,7 +2,7 @@ import type { TypeSwiperList } from '@/types'
 export const swiperList: TypeSwiperList = [
   {
     id: 1,
-    url: 'dm13.jpg',
+    url: 'dm17.jpg',
     desc: '图片1'
   },
 
@@ -44,6 +44,11 @@ export const swiperList: TypeSwiperList = [
   {
     id: 9,
     url: 'dm12.jpg',
+    desc: '图片12'
+  },
+  {
+    id: 10,
+    url: 'dm18.jpg',
     desc: '图片12'
   }
 ]

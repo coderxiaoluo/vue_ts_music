@@ -16,6 +16,7 @@ declare module '@vue/runtime-core' {
     DataList: typeof import('./src/components/data-list/data-list.vue')['default']
     DateList: typeof import('./src/components/date-list/date-list.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']

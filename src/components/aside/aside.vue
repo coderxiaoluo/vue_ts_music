@@ -40,7 +40,7 @@
               </el-icon>
               <span>我的歌单</span>
             </template>
-            <template v-for="item in userplaylist" :key="item.id">
+            <template v-for="(item, index) in userplaylist" :key="index">
               <el-menu-item
                 @click="onHandleClick"
                 :index="'/musicdetail/' + String(item.id)"
@@ -59,7 +59,7 @@
               <span>收藏的歌单</span>
             </template>
 
-            <template v-for="item in userplaylist" :key="item.id">
+            <template v-for="(item, index) in userplaylist" :key="index">
               <el-menu-item
                 @click="onHandleClick"
                 :index="'/musicdetail/' + String(item.id)"

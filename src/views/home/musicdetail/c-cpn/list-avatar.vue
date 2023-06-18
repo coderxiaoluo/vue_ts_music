@@ -2,7 +2,7 @@
   <div class="list-avatar animate__animated animate__backInLeft">
     <swiper :effect="'cards'" :grabCursor="true" :modules="modules" class="swiper">
       <swiper-slide> <img class="img" :src="playList.coverImgUrl" alt="图片信息" /></swiper-slide>
-      <template v-for="item in playList.tracks" :key="item.id">
+      <template v-for="item in playList?.tracks" :key="item.id">
         <swiper-slide>
           <img :src="item.al.picUrl" :alt="item.name" />
         </swiper-slide>

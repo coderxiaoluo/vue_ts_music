@@ -24,8 +24,8 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
     const result = await getDetailsDataListAll(id)
     // 歌曲详情 以及没有登录的20首音乐
     playList.value = result.playlist
-    tracksList.value = result.playlist.tracks
-    subScriber.value = result.playlist.subscribers
+    tracksList.value = result.playlist?.tracks
+    subScriber.value = result.playlist?.subscribers
     LOADING.value = false
   }
 
