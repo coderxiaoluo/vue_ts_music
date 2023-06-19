@@ -108,6 +108,7 @@ export const useLoginStore = defineStore('login', () => {
     if (data.code == 200) {
       // 用户歌单列表
       const res = await getUserPlayList(data.account.id)
+      console.log(res)
       userplaylist.value = res.playlist
       localCache.setCache('userplaylist', res.playlist)
 

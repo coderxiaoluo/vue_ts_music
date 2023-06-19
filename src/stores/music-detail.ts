@@ -30,9 +30,8 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
   }
 
   // 登录调用这个
-  const getTrackAllDataAction = async (id: string | number) => {
-    const result = await getTrackAllData(id)
-    // console.log(result)
+  const getTrackAllDataAction = async (id: string | number, trackCount?: any) => {
+    const result = await getTrackAllData(id, trackCount)
     songsAll.value = result.songs
     LOADING.value = false
   }

@@ -7,7 +7,7 @@ export function getDetailsDataListAll(id: string) {
   })
 }
 // 登录后使用这个接口 获取歌单所有歌曲
-export function getTrackAllData(id: number | string, trackCount = 999) {
+export function getTrackAllData(id: number | string, trackCount: any = 20) {
   return lRequest.get({
     url: `/playlist/track/all?id=${id}&limit=${trackCount}`
   })

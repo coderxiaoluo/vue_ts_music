@@ -60,7 +60,7 @@ import { swiperList } from '@/assets/data/user-bg'
 // img
 import { imgURL } from '@/utils/img-url'
 
-//  TODO:  动态展示图片 有bug  可以换成判断男女切换动态背景  userProfile.value.gender
+//  TODO:  动态展示图片 有bug  可以换成判断性别切换动态背景  userProfile.value.gender
 const bgImage = imgURL(swiperList[randomFn(1, swiperList.length)].url)
 
 const userStore = useUserStore()

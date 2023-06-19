@@ -58,12 +58,12 @@ if (isStatus.value) {
 }
 
 // 点击左侧aside动态展示右边内容
-watch(route, (newValue) => {
-  // 重新拿到动态id 进行请求
-  const id: any = newValue.params.id
-  musicDetailStore.getTrackAllDataAction(id)
-  musicDetailStore.getDetailsDataListAllAction(id)
-})
+// watch(route, (newValue) => {
+//   // 重新拿到动态id 进行请求
+//   const id: any = newValue.params.id
+//   musicDetailStore.getTrackAllDataAction(id)
+//   musicDetailStore.getDetailsDataListAllAction(id)
+// })
 
 // 展示信息
 const { playList } = storeToRefs(musicDetailStore)

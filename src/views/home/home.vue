@@ -2,11 +2,9 @@
   <div class="home">
     <el-container>
       <!-- 侧边栏组件 -->
-
       <el-aside :width="isFold ? '60px' : '220px'">
         <Aside></Aside>
       </el-aside>
-
       <el-container>
         <el-header>
           <!-- 顶部组件 -->
@@ -18,6 +16,8 @@
         </el-main>
       </el-container>
     </el-container>
+    <!-- 底部 -->
+    <BottomControl />
   </div>
 </template>
 
@@ -28,6 +28,8 @@ import Header from '@/components/header/header.vue'
 import Aside from '@/components/aside/aside.vue'
 // 主体组件
 import Main from '@/components/main/Main.vue'
+// 底部
+import BottomControl from '@/components/bottomcontrol/bottom-control.vue'
 // 拿到store
 import { useSettingStore } from '@/stores/setting'
 import { storeToRefs } from 'pinia'
@@ -48,7 +50,6 @@ recommendStore.getRelatedDataListAction()
 .home {
   width: 100%;
   height: 100%;
-
   .el-container {
     width: 100%;
     height: 100%;

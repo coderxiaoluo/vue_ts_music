@@ -51,18 +51,31 @@ export const routes = [
   // 二级路由
   // video
   {
-    name: 'Video',
     path: '/video',
     component: () => import('@/views/home/home.vue'),
-    redirect: '/video/videos',
+    redirect: '/video/video-list',
     children: [
       {
-        path: '/video/videos',
-        name: 'Videos',
-        component: () => import('@/views/home/video/video.vue')
+        path: '/video',
+        name: 'Video',
+        component: () => import('@/views/home/video/video.vue'),
+        children: [
+          {
+            path: '/video/video-list',
+            name: 'VideoList',
+            component: () => import('@/views/home/video/videolist/video-list.vue')
+          },
+          {
+            path: '/video/mv-list',
+            name: 'MvList',
+            component: () => import('@/views/home/video/mvlist/mv-list.vue')
+          }
+        ]
       }
     ]
   },
+
+  // 详情
   {
     name: 'MusicDetail',
     path: '/musicdetail/:id',

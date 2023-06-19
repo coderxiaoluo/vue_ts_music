@@ -7,7 +7,11 @@ import './theme/index.css'
 // 清除默认样式
 import 'normalize.css'
 // element信息提示组件样式
+
 import 'element-plus/theme-chalk/el-message.css'
+import 'element-plus/dist/index.css'
+
+
 // wow.js animate.css
 import 'animate.css'
 import 'animate.css/animate.compat.css'
@@ -35,13 +39,12 @@ const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
-// axios({
-//   method: 'get',
-//   // http://api.map.baidu.com/reverse_geocoding/v3/?ak=你的AK&output=json&coordtype=wgs84ll&location=31.225696,121.49884
-//   url: 'reverse_geocoding/v3/?ak=7ejPjXA5vblz2PFSv3fRXTEGlvLN32sy&output=json&coordtype=wgs84ll&location=31.225696,121.49884'
-// }).then((res) => {
-//   console.log(res)
-// })
+
+// video
+import vue3videoPlay from 'vue3-video-play' // 引入组件
+import 'vue3-video-play/dist/style.css' // 引入css
+
 app.use(store)
 app.use(router)
+app.use(vue3videoPlay)
 app.mount('#app')

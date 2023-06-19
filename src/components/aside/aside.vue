@@ -9,7 +9,7 @@
         @close="handleClose"
         :collapse="isFold"
         router
-        :default-active="defaultRoute"
+        default-active="/findmusic"
         class="menu"
       >
         <el-menu-item index="/findmusic/recommend">
@@ -21,7 +21,7 @@
 
           <span> 发现音乐</span>
         </el-menu-item>
-        <el-menu-item index="/video">
+        <el-menu-item index="/video/video-list">
           <el-icon>
             <svg class="icon aside_video_icon" aria-hidden="true">
               <use xlink:href="#icon-shipin-"></use>
@@ -42,7 +42,7 @@
             </template>
             <template v-for="(item, index) in userplaylist" :key="index">
               <el-menu-item
-                @click="onHandleClick"
+                @click="onHandleClick(item)"
                 :index="'/musicdetail/' + String(item.id)"
                 v-if="item.creator.djStatus === 0"
                 ><el-text class="w-100px" truncated>{{ item.name }}</el-text>
@@ -61,7 +61,7 @@
 
             <template v-for="(item, index) in userplaylist" :key="index">
               <el-menu-item
-                @click="onHandleClick"
+                @click="onHandleClick(item)"
                 :index="'/musicdetail/' + String(item.id)"
                 v-if="item.creator.djStatus === 10"
                 ><el-text class="w-100px" truncated>{{ item.name }}</el-text>
@@ -81,7 +81,6 @@ import { useSettingStore } from '@/stores/setting'
 import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
-import { localCache } from '@/utils/localCache'
 import { useMusicDetailStore } from '@/stores/music-detail'
 
 // 获取store
@@ -92,15 +91,14 @@ const { isStatus, userplaylist } = storeToRefs(loginStore)
 const settingStore = useSettingStore()
 // 折叠变量
 const { isFold } = storeToRefs(settingStore)
-// console.log(userplaylist)
 
 // router持久化
-const defaultRoute = ref(localCache.getCache('menuPath') ?? '/findmusic')
+// const defaultRoute = ref(localCache.getCache('menuPath') ?? '/findmusic')
 const route = useRoute()
-watch(route, (newVal) => {
-  localCache.setCache('menuPath', newVal.path)
-  defaultRoute.value = newVal.path
-})
+// watch(route, (newVal) => {
+//   localCache.setCache('menuPath', newVal.path)
+//   defaultRoute.value = newVal.path
+// })
 
 const handleOpen = (key: string, keyPath: string[]) => {
   // console.log(key, keyPath)
@@ -109,13 +107,14 @@ const handleClose = (key: string, keyPath: string[]) => {
   // console.log(key, keyPath)
 }
 
-const musicId = ref<any>(route.params.id)
-
 const musicDetailStore = useMusicDetailStore()
 const { isRefresh } = storeToRefs(settingStore)
-const onHandleClick = () => {
-  // 刷新按钮
-  // isRefresh.value = false
+
+// 左侧点击事件
+const onHandleClick = (v: any) => {
+  // 点击左侧aside动态展示右边内容
+  musicDetailStore.getTrackAllDataAction(v.id, v.trackCount)
+  musicDetailStore.getDetailsDataListAllAction(v.id)
 }
 </script>
 
