@@ -54,14 +54,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 // 随机数
-import { randomFn } from '@/utils/random'
+import { randomMusic } from '@/utils/random'
 // 引入图片
 import { swiperList } from '@/assets/data/user-bg'
 // img
 import { imgURL } from '@/utils/img-url'
 
 //  TODO:  动态展示图片 有bug  可以换成判断性别切换动态背景  userProfile.value.gender
-const bgImage = imgURL(swiperList[randomFn(1, swiperList.length)].url)
+const bgImage = imgURL(swiperList[randomMusic(1, swiperList.length)].url)
 
 const userStore = useUserStore()
 const route = useRoute()

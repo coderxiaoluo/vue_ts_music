@@ -59,6 +59,10 @@ import { formatDuration } from '@/utils/formatplay'
 
 import { usePlayMusicStore } from '@/stores/play-music'
 import { storeToRefs } from 'pinia'
+// 歌词
+import { useRecordStore } from '@/stores/record'
+
+const recordStore = useRecordStore()
 
 const props = defineProps({
   musicList: {
@@ -96,6 +100,8 @@ const onPlayDbClick = (v: any) => {
   playMusicStore.savePlayMusicFn(v, props.musicList)
   // 发送请求拿到音乐url
   playMusicStore.getSongUrlAction(v.id)
+  // 拿到歌词
+  recordStore.getLyricDataAction(v.id)
 }
 </script>
 

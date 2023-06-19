@@ -31,6 +31,8 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
 
   // 登录调用这个
   const getTrackAllDataAction = async (id: string | number, trackCount?: any) => {
+    // 当超过5000条,只发送200条
+    if (trackCount > 5000) trackCount = 300
     const result = await getTrackAllData(id, trackCount)
     songsAll.value = result.songs
     LOADING.value = false

@@ -12,7 +12,7 @@
       @timeupdate="onTimeupDateMusic"
     ></audio>
 
-    <!-- 音乐 -->
+    <!-- left部分 音乐 -->
     <songLeft :currentMusic="currentMusic" />
     <div class="center">
       <!-- 按钮相关 -->
@@ -58,46 +58,18 @@
       </div>
     </div>
 
-    <div class="right">
-      <!-- icon-bofangliebiao -->
-      <div class="volumeControl">
-        <!-- 音量 -->
-        <svg
-          @click="onVolumeClick(true)"
-          v-if="isVolume"
-          class="icon volumeicon"
-          aria-hidden="true"
-        >
-          <use xlink:href="#icon-yinliang"></use>
-        </svg>
-        <svg @click="onVolumeClick(false)" v-else class="icon volumeicon" aria-hidden="true">
-          <use xlink:href="#icon-shengyinjingyin"></use>
-        </svg>
-        <!-- 音量 滑块-->
-        <el-slider
-          @input="onInputVolume"
-          class="slider"
-          :max="100"
-          :min="0"
-          v-model="volume"
-          size="small"
-        />
-        <!-- 列表 -->
-        <div class="playList">
-          <svg @click="handlePLayListClick" class="icon playicon" aria-hidden="true">
-            <use xlink:href="#icon-liebiao"></use>
-          </svg>
-        </div>
-      </div>
-      <!-- 备案 -->
-      <div class="filings">渝ICP备20230613号</div>
-    </div>
+    <!-- right -->
+    <SongRight
+      @emit-volume="onVolumeEmitClick"
+      @on-mute-volume="onMuteEmitClick"
+      @emit-play-list="handlePLayListEmitClick"
+    />
     <!-- 抽屉 -->
     <el-drawer
       v-model="table"
       :modal="true"
       :lock-scroll="true"
-      :z-index="7"
+      :z-index="78"
       :with-header="false"
       :show-close="false"
       :append-to-body="true"
@@ -145,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 import { ElDrawer } from 'element-plus'
 
@@ -154,27 +126,34 @@ import { randomMusic } from '@/utils/random'
 
 import { usePlayMusicStore } from '@/stores/play-music'
 
+import { useRecordStore } from '@/stores/record'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 // 左边
 import songLeft from './c-cpn/song-left.vue'
+// 右边
+import SongRight from './c-cpn/song-right.vue'
 
 const playMusicStore = usePlayMusicStore()
 
+const recordStore = useRecordStore()
+
 const { currentMusic, musicUrl, isShowPlay, playMusicData } = storeToRefs(playMusicStore)
+const { lyricTime } = storeToRefs(recordStore)
 
 const table = ref(false)
+// 拿到audio
+const audioEl = ref()
 
 // 抽取hook
-function songMusicHook(musicUrl: any) {
-  if (musicUrl.value.length == 0) return
-}
+// function songMusicHook(musicUrl: any) {
+//   if (musicUrl.value.length == 0) return
+// }
 
 // 设置顺序播放  / 循环播放 / 随机播放
 const svgArr = ['#icon-shunxubofang', '#icon-danquxunhuan', '#icon-suijibofang']
 let svgIndex = ref(0)
-// 拿到audio
-const audioEl = ref()
+
 // 当前时间
 const currentTime = ref(audioEl.value?.currentTime)
 // 总时间
@@ -221,6 +200,8 @@ const previousMusicClick = () => {
     const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index - 1])
     playMusicStore.setCurrentMusic(nextMusicInfo.value)
     playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+    // 拿到歌词
+    recordStore.getLyricDataAction(nextMusicInfo.value.id)
   }
 
   // 2 表示单曲循环
@@ -236,6 +217,8 @@ const previousMusicClick = () => {
     let random = randomMusic(0, playMusicData.value.length - 1)
     playMusicStore.getSongUrlAction(playMusicData.value[random].id)
     playMusicStore.setCurrentMusic(playMusicData.value[random])
+    // 拿到歌词
+    recordStore.getLyricDataAction(playMusicData.value[random].id)
   }
 }
 // 下一首
@@ -255,6 +238,8 @@ const nextMusicClick = () => {
     const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index + 1])
     playMusicStore.setCurrentMusic(nextMusicInfo.value)
     playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+    // 拿到歌词
+    recordStore.getLyricDataAction(nextMusicInfo.value.id)
   }
   // 2 表示单曲循环
   if (svgIndex.value == 1) {
@@ -269,6 +254,8 @@ const nextMusicClick = () => {
     let random = randomMusic(0, playMusicData.value.length - 1)
     playMusicStore.getSongUrlAction(playMusicData.value[random].id)
     playMusicStore.setCurrentMusic(playMusicData.value[random])
+    // 拿到歌词
+    recordStore.getLyricDataAction(playMusicData.value[random].id)
   }
 }
 
@@ -283,8 +270,13 @@ const onInputTime = (v: any) => {
   audioEl.value.currentTime = Math.floor(durationTime.value * (v / 100))
 }
 
-// 点击展开左侧列表
-const handlePLayListClick = () => {
+// 当进度条改变了将值存储再store中 ，在唱片页中进行歌词匹配
+watch(currentTimes, (newvalue) => {
+  lyricTime.value = newvalue
+})
+
+// 点击展开右侧列表  emits
+const handlePLayListEmitClick = () => {
   table.value = !table.value
 }
 
@@ -326,6 +318,8 @@ function overAudio() {
     const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index + 1])
     playMusicStore.setCurrentMusic(nextMusicInfo.value)
     playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+    // 拿到歌词
+    recordStore.getLyricDataAction(nextMusicInfo.value.id)
   }
 
   // 2 表示单曲循环
@@ -341,6 +335,8 @@ function overAudio() {
     let random = randomMusic(0, playMusicData.value.length - 1)
     playMusicStore.getSongUrlAction(playMusicData.value[random].id)
     playMusicStore.setCurrentMusic(playMusicData.value[random])
+    // 拿到歌词
+    recordStore.getLyricDataAction(playMusicData.value[random].id)
   }
 }
 // 当时间改变时触发
@@ -357,24 +353,15 @@ function onTimeupDateMusic() {
 }
 
 // 音量
-const isVolume = ref(true)
-const volume = ref(50)
-/* 音量业务逻辑  */
-const onInputVolume = (v: any) => {
-  if (v !== 0) isVolume.value = true
-  if (v == 0) isVolume.value = false
-  audioEl.value.volume = (v / 100).toFixed(1)
+const onVolumeEmitClick = (v: any) => {
+  audioEl.value.volume = v
 }
 // 是否静音
-const onVolumeClick = (v: boolean) => {
+const onMuteEmitClick = (v: boolean) => {
   if (v) {
     audioEl.value.volume = 0
-    volume.value = 0
-    isVolume.value = false
   } else {
     audioEl.value.volume = 0.5
-    volume.value = 50
-    isVolume.value = true
   }
 }
 </script>
@@ -442,47 +429,6 @@ const onVolumeClick = (v: boolean) => {
         --el-slider-main-bg-color: skyblue;
         --el-slider-button-size: 10px;
       }
-    }
-  }
-
-  .right {
-    width: 280px;
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
-    align-items: flex-end;
-    margin-right: 20px;
-    .volumeControl {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      height: 50px;
-      width: 200px;
-      .volumeicon {
-        margin: 0 5px;
-        width: 20px;
-        height: 20px;
-      }
-
-      .slider {
-        margin: 0 10px;
-        width: 90px;
-      }
-
-      .playList {
-        width: 18px;
-        height: 18px;
-        margin: 0 5px;
-        .playicon {
-          width: 100%;
-          height: 100%;
-          cursor: pointer;
-        }
-      }
-    }
-    .filings {
-      font-size: 10px;
-      margin-right: 30px;
     }
   }
 }

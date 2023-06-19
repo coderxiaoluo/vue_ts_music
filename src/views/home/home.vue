@@ -18,10 +18,23 @@
     </el-container>
     <!-- 底部 -->
     <BottomControl />
+    <!-- 唱片 -->
+    <el-drawer
+      class="drawer"
+      v-model="isRecordPage"
+      direction="btt"
+      :show-close="false"
+      :with-header="false"
+      size="100%"
+      :z-index="76"
+    >
+      <Record v-show="true" />
+    </el-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 // 顶部组件
 import Header from '@/components/header/header.vue'
 // 侧边栏组件
@@ -30,11 +43,16 @@ import Aside from '@/components/aside/aside.vue'
 import Main from '@/components/main/Main.vue'
 // 底部
 import BottomControl from '@/components/bottomcontrol/bottom-control.vue'
+// 唱片
+import Record from './record/record.vue'
 // 拿到store
 import { useSettingStore } from '@/stores/setting'
 import { storeToRefs } from 'pinia'
-
 import { useRecommendStore } from '@/stores/recommend'
+// 唱片store
+import { useRecordStore } from '@/stores/record'
+
+const recordStore = useRecordStore()
 
 // 判断侧边栏展开
 const settingStore = useSettingStore()
@@ -44,6 +62,11 @@ const { isFold } = storeToRefs(settingStore)
 const recommendStore = useRecommendStore()
 recommendStore.getBannerDataAction()
 recommendStore.getRelatedDataListAction()
+
+//
+const drawer = ref(false)
+
+const { isRecordPage } = storeToRefs(recordStore)
 </script>
 
 <style lang="less" scoped>
@@ -70,5 +93,12 @@ recommendStore.getRelatedDataListAction()
   .el-main {
     padding: 0;
   }
+}
+
+:deep(.drawer) {
+  --el-drawer-padding-primary: 0 !important;
+}
+:deep(.el-drawer__body) {
+  --el-drawer-padding-primary: 0 !important;
 }
 </style>

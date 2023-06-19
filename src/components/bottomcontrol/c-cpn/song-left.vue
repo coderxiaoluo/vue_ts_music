@@ -1,8 +1,14 @@
 <template>
   <div class="song-left">
     <div v-if="currentMusic.al" class="left">
-      <div class="img">
+      <div class="img" @click="handleRecordClick">
         <img :src="currentMusic.al?.picUrl" alt="" />
+        <i v-if="!isRecordPage"
+          ><el-icon><ArrowUpBold /></el-icon
+        ></i>
+        <i v-else
+          ><el-icon><ArrowDownBold /></el-icon
+        ></i>
       </div>
       <div class="music-info">
         <div class="music-name">
@@ -21,11 +27,21 @@
 </template>
 
 <script setup lang="ts">
+import { useRecordStore } from '@/stores/record'
+
+import { storeToRefs } from 'pinia'
 interface Props {
   currentMusic: any
 }
-
 defineProps<Props>()
+
+const recordStore = useRecordStore()
+
+const { isRecordPage } = storeToRefs(recordStore)
+
+const handleRecordClick = () => {
+  recordStore.setIsRecordPageFn()
+}
 </script>
 
 <style lang="less" scoped>
@@ -43,12 +59,32 @@ defineProps<Props>()
   // background-color: red;
 
   .img {
+    position: relative;
     width: 50px;
     height: 100%;
     img {
       width: 100%;
       height: 100%;
     }
+
+    i {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50px;
+      height: 50px;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: none;
+      .el-icon {
+        text-align: center;
+        line-height: 50px;
+        color: #ffffff;
+      }
+    }
+  }
+  .img:hover i {
+    cursor: pointer;
+    display: block;
   }
   .music-info {
     width: 180px;

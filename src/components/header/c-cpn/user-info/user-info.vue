@@ -68,7 +68,6 @@ const { qrimg, stopTimer, inspect, expireQr, account, profile, isStatus, isDialo
   storeToRefs(loginStore)
 
 const formRef = ref<FormInstance>()
-console.log(profile)
 // 登录页面展示
 const dialogTableVisible = ref(false)
 
@@ -122,11 +121,11 @@ const loginBtnCodeClick = (formRef: FormInstance | undefined) => {
   if (!formRef) return
   formRef.validate((valid: boolean) => {
     if (valid) {
-      console.log('已发送')
+      // console.log('已发送')
       // 拿到手机号发送请求
       loginStore.getCaptchaSentAction(Number(rulePhone.phone))
     } else {
-      console.log('错误')
+      // console.log('错误')
     }
   })
 }
@@ -139,7 +138,7 @@ const loginBtnClick = (formRef: FormInstance | undefined) => {
       // 拿到手机号发送请求
       loginStore.getCaptchaVerifyAction(Number(rulePhone.phone), Number(rulePhone.verify))
     } else {
-      console.log('错误')
+      // console.log('错误')
     }
   })
 }
