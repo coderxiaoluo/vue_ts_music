@@ -64,7 +64,9 @@
                 @click="onHandleClick(item)"
                 :index="'/musicdetail/' + String(item.id)"
                 v-if="item.creator.djStatus === 10"
-                ><el-text class="w-100px" truncated>{{ item.name }}</el-text>
+                ><el-text class="w-100px" truncated>{{
+                  index == 0 ? (item.name = '我喜欢的音乐') : item.name
+                }}</el-text>
               </el-menu-item>
             </template>
           </el-sub-menu>
@@ -108,7 +110,6 @@ const handleClose = (key: string, keyPath: string[]) => {
 }
 
 const musicDetailStore = useMusicDetailStore()
-const { isRefresh } = storeToRefs(settingStore)
 
 // 左侧点击事件
 const onHandleClick = (v: any) => {

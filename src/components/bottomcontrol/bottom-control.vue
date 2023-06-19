@@ -3,7 +3,7 @@
     <audio
       ref="audioEl"
       v-show="false"
-      src=""
+      :src="musicUrl[0]?.url"
       controls
       @play="onPlay"
       @pause="onPause"
@@ -13,41 +13,30 @@
     ></audio>
 
     <!-- 音乐 -->
-    <div class="left">
-      <div class="img">
-        <img
-          class=""
-          src="http://p1.music.126.net/8ad0ywcK7Ti_2_Q3Xrehmg==/109951168631980291.jpg "
-          alt=""
-        />
-      </div>
-      <div class="music-info">
-        <div class="music-name">
-          <el-text truncated>Self elemSelf elemSelf elemSelf elem</el-text>
-        </div>
-        <div class="singer">miaoshu1</div>
-      </div>
-    </div>
+    <songLeft :currentMusic="currentMusic" />
     <div class="center">
       <!-- 按钮相关 -->
       <div class="buttons">
         <span>
-          <svg class="icon playicon1" aria-hidden="true">
-            <use xlink:href="#icon-shunxubofang"></use>
+          <svg @click="onchangeMusicList" class="icon playicon" aria-hidden="true">
+            <use :xlink:href="svgArr[svgIndex]"></use>
           </svg>
         </span>
         <span>
-          <svg class="icon playicon" aria-hidden="true">
+          <svg @click="previousMusicClick" class="icon playicon" aria-hidden="true">
             <use xlink:href="#icon-shangyishou1"></use>
           </svg>
         </span>
         <span>
-          <svg class="icon playicon" aria-hidden="true">
+          <svg v-if="!isShowPlay" @click="playPause" class="icon playicon" aria-hidden="true">
             <use xlink:href="#icon-bofang4"></use>
+          </svg>
+          <svg v-else @click="playPause" class="icon playicon" aria-hidden="true">
+            <use xlink:href="#icon-zanting"></use>
           </svg>
         </span>
         <span>
-          <svg class="icon playicon" aria-hidden="true">
+          <svg @click="nextMusicClick" class="icon playicon" aria-hidden="true">
             <use xlink:href="#icon-xiayishou1"></use>
           </svg>
         </span>
@@ -56,14 +45,16 @@
       <div class="progressBar">
         <!-- 开始时间 -->
         <div class="currentTime">
-          <span>00:00</span>
+          <span v-if="currentTimes !== 0">{{ currentDuration(currentTimes) }}</span>
+          <span v-else>00:00</span>
         </div>
         <!-- 滑块 -->
         <div class="slider-demo-block">
           <el-slider @input="onInputTime" v-model="sliderbar" :show-tooltip="false" size="small" />
         </div>
         <!-- 结束时间 -->
-        <div class="endTime"><span>00:00</span></div>
+        <div class="endTime" v-if="musicUrl[0]">{{ formatDuration(musicUrl[0]?.time) }}</div>
+        <div class="endTime" v-else>00:00</div>
       </div>
     </div>
 
@@ -71,11 +62,26 @@
       <!-- icon-bofangliebiao -->
       <div class="volumeControl">
         <!-- 音量 -->
-        <svg class="icon volumeicon" aria-hidden="true">
+        <svg
+          @click="onVolumeClick(true)"
+          v-if="isVolume"
+          class="icon volumeicon"
+          aria-hidden="true"
+        >
           <use xlink:href="#icon-yinliang"></use>
         </svg>
+        <svg @click="onVolumeClick(false)" v-else class="icon volumeicon" aria-hidden="true">
+          <use xlink:href="#icon-shengyinjingyin"></use>
+        </svg>
         <!-- 音量 滑块-->
-        <el-slider class="slider" :max="100" :min="0" v-model="volume" size="small" />
+        <el-slider
+          @input="onInputVolume"
+          class="slider"
+          :max="100"
+          :min="0"
+          v-model="volume"
+          size="small"
+        />
         <!-- 列表 -->
         <div class="playList">
           <svg @click="handlePLayListClick" class="icon playicon" aria-hidden="true">
@@ -99,7 +105,41 @@
       size="25%"
       height="83%"
     >
-      <el-table :data="gridData"> </el-table>
+      <h2 class="songlist">
+        <span v-if="playMusicData.length !== 0">{{ playMusicData.length }}首</span>
+        <span class="start-text" v-else>忍者时代即将结束</span>
+      </h2>
+      <el-table
+        class="table"
+        :data="playMusicData"
+        highlight-current-row
+        :show-header="false"
+        stripe
+        lazy
+        element-loading-text="加载中..."
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+        @row-dblclick="onPlayDbDrawerClick"
+      >
+        <el-table-column class="musicName" property="name" label="name" width="150">
+          <template #default="scope">
+            <el-text class="w-100px" truncated>{{ scope.row.name }}</el-text>
+          </template>
+        </el-table-column>
+        <el-table-column property="ar" width="120">
+          <template #default="scope">
+            <el-text class="w-100px" truncated v-if="scope.row.ar[1]"
+              >{{ scope.row.ar[0].name }} / {{ scope.row?.ar[1]?.name }}</el-text
+            >
+            <el-text v-else>{{ scope.row.ar[0].name }} </el-text>
+          </template>
+        </el-table-column>
+        <el-table-column prop="dt" width="100">
+          <template #default="scope">
+            <span>{{ formatDuration(scope.row.dt) }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-drawer>
   </div>
 </template>
@@ -109,39 +149,233 @@ import { ref } from 'vue'
 
 import { ElDrawer } from 'element-plus'
 
-const table = ref(false)
-const gridData = [
-  {
-    date: '2016-05-02',
-    name: 'Peter Parker',
-    address: 'Queens, New York City'
-  }
-]
-// 音频准备就绪了
-function canplayLoad() {}
-// 开始播放
-function onPlay() {}
-// 当音频暂停
-function onPause() {}
-// 播放结束触发
-function overAudio() {}
-// 当时间改变时触发
-function onTimeupDateMusic() {}
+import { formatDuration, currentDuration } from '@/utils/formatplay'
+import { randomMusic } from '@/utils/random'
 
+import { usePlayMusicStore } from '@/stores/play-music'
+
+import { storeToRefs } from 'pinia'
+import { ElMessage } from 'element-plus'
+// 左边
+import songLeft from './c-cpn/song-left.vue'
+
+const playMusicStore = usePlayMusicStore()
+
+const { currentMusic, musicUrl, isShowPlay, playMusicData } = storeToRefs(playMusicStore)
+
+const table = ref(false)
+
+// 抽取hook
+function songMusicHook(musicUrl: any) {
+  if (musicUrl.value.length == 0) return
+}
+
+// 设置顺序播放  / 循环播放 / 随机播放
+const svgArr = ['#icon-shunxubofang', '#icon-danquxunhuan', '#icon-suijibofang']
+let svgIndex = ref(0)
+// 拿到audio
+const audioEl = ref()
+// 当前时间
+const currentTime = ref(audioEl.value?.currentTime)
+// 总时间
+const durationTime = ref(audioEl.value?.duration)
+// 百分比时间
+const tmpOffsetTime = ref(0)
+
+const onchangeMusicList = () => {
+  svgIndex.value++
+  if (svgIndex.value == svgArr.length) svgIndex.value = 0
+}
+
+// 音频准备就绪了
+function canplayLoad() {
+  audioEl.value.play()
+}
+
+// 点击开始播放
+const playPause = () => {
+  if (musicUrl.value.length == 0) return
+  if (isShowPlay.value) {
+    audioEl.value.pause()
+    isShowPlay.value = false
+  } else {
+    audioEl.value.play()
+    isShowPlay.value = true
+  }
+}
+
+// 上一首
+const previousMusicClick = () => {
+  // 没有歌曲时直接返回
+  if (musicUrl.value.length == 0) return
+  // 当等于第一首时直接返回
+  if (currentMusic.value.index == 0) {
+    ElMessage({
+      message: '当前已经是第一首了',
+      type: 'warning'
+    })
+    return
+  }
+  // 顺序播放时
+  if (svgIndex.value == 0) {
+    const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index - 1])
+    playMusicStore.setCurrentMusic(nextMusicInfo.value)
+    playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+  }
+
+  // 2 表示单曲循环
+  if (svgIndex.value == 1) {
+    const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index])
+    // 改变当前播放
+    playMusicStore.setCurrentMusic(nextMusicInfo.value)
+    // 获取要播放的mp3
+    playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+  }
+  // 3 表示随机播放
+  if (svgIndex.value == 2) {
+    let random = randomMusic(0, playMusicData.value.length - 1)
+    playMusicStore.getSongUrlAction(playMusicData.value[random].id)
+    playMusicStore.setCurrentMusic(playMusicData.value[random])
+  }
+}
+// 下一首
+const nextMusicClick = () => {
+  // 没有歌曲时直接返回
+  if (musicUrl.value.length == 0) return
+  // 最后一首直接返回
+  if (currentMusic.value.index == playMusicData.value.length - 1) {
+    ElMessage({
+      message: '当前已经是最后一首了',
+      type: 'warning'
+    })
+    return
+  }
+  // 1 顺序播放
+  if (svgIndex.value == 0) {
+    const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index + 1])
+    playMusicStore.setCurrentMusic(nextMusicInfo.value)
+    playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+  }
+  // 2 表示单曲循环
+  if (svgIndex.value == 1) {
+    const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index])
+    // 改变当前播放
+    playMusicStore.setCurrentMusic(nextMusicInfo.value)
+    // 获取要播放的mp3
+    playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+  }
+  // 3 表示随机播放
+  if (svgIndex.value == 2) {
+    let random = randomMusic(0, playMusicData.value.length - 1)
+    playMusicStore.getSongUrlAction(playMusicData.value[random].id)
+    playMusicStore.setCurrentMusic(playMusicData.value[random])
+  }
+}
+
+// 滑块进度条业务逻辑
 // 滑块进度
 const sliderbar = ref(0)
-
-// 音量
-const volume = ref(50)
-
+let currentTimes = ref(0)
 // 滑块事件
 const onInputTime = (v: any) => {
-  console.log(v)
+  if (musicUrl.value.length == 0) return
+  currentTimes.value = Math.floor(durationTime.value * (v / 100))
+  audioEl.value.currentTime = Math.floor(durationTime.value * (v / 100))
 }
 
 // 点击展开左侧列表
 const handlePLayListClick = () => {
   table.value = !table.value
+}
+
+// 点击侧边栏播放
+const onPlayDbDrawerClick = (v: any) => {
+  // v:拿到当前双击数据
+  // 侧边栏双击这首 等于 播放这首就直接返回
+  if (currentMusic.value.al?.id == v.id) return
+  // 拿到点击这首发送请求拿到url
+  playMusicStore.getSongUrlAction(v.id)
+  // 改变播放的这首为点击的这首
+  playMusicStore.setCurrentMusic(v)
+}
+
+// 给列表添加样式
+function tableRowClassName({ row, rowIndex }: { row: any; rowIndex: any }) {
+  if (currentMusic.value.id == row.id) {
+    return 'back-row-index'
+  } else {
+    return ''
+  }
+}
+
+// 开始播放
+function onPlay() {
+  isShowPlay.value = true
+}
+// 当音频暂停
+function onPause() {
+  isShowPlay.value = false
+}
+// 播放结束触发
+function overAudio() {
+  // 自动播放下一首
+  // 当等于最后一首直接返回
+  if (currentMusic.value.index == playMusicData.value.length - 1) return
+
+  if (svgIndex.value == 0) {
+    const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index + 1])
+    playMusicStore.setCurrentMusic(nextMusicInfo.value)
+    playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+  }
+
+  // 2 表示单曲循环
+  if (svgIndex.value == 1) {
+    const nextMusicInfo = ref(playMusicData.value[currentMusic.value.index])
+    // 改变当前播放
+    playMusicStore.setCurrentMusic(nextMusicInfo.value)
+    // 获取要播放的mp3
+    playMusicStore.getSongUrlAction(nextMusicInfo.value.id)
+  }
+  // 3 表示随机播放
+  if (svgIndex.value == 2) {
+    let random = randomMusic(0, playMusicData.value.length - 1)
+    playMusicStore.getSongUrlAction(playMusicData.value[random].id)
+    playMusicStore.setCurrentMusic(playMusicData.value[random])
+  }
+}
+// 当时间改变时触发
+function onTimeupDateMusic() {
+  // 格式化时间
+  currentTimes.value = audioEl.value?.currentTime
+  // 计算当前时间是总时间的百分比   当前时间 / 总时间
+  currentTime.value = audioEl.value?.currentTime
+  durationTime.value = audioEl.value?.duration
+  const tmpTime = currentTime.value / durationTime.value
+  tmpOffsetTime.value = Math.floor(100 * tmpTime)
+  // 给值赋值给滑块
+  sliderbar.value = tmpOffsetTime.value
+}
+
+// 音量
+const isVolume = ref(true)
+const volume = ref(50)
+/* 音量业务逻辑  */
+const onInputVolume = (v: any) => {
+  if (v !== 0) isVolume.value = true
+  if (v == 0) isVolume.value = false
+  audioEl.value.volume = (v / 100).toFixed(1)
+}
+// 是否静音
+const onVolumeClick = (v: boolean) => {
+  if (v) {
+    audioEl.value.volume = 0
+    volume.value = 0
+    isVolume.value = false
+  } else {
+    audioEl.value.volume = 0.5
+    volume.value = 50
+    isVolume.value = true
+  }
 }
 </script>
 
@@ -160,30 +394,6 @@ const handlePLayListClick = () => {
   box-sizing: border-box;
   padding: 5px;
   overflow: hidden;
-  .left {
-    width: 250px;
-    height: 100%;
-    display: flex;
-    // background-color: red;
-
-    .img {
-      width: 55px;
-      height: 100%;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .music-info {
-      width: 180px;
-      padding-top: 10px;
-      margin-left: 10px;
-      .music-name {
-        font-size: 12px;
-        color: #fff;
-      }
-    }
-  }
 
   // 中间部分
   .center {
@@ -258,6 +468,7 @@ const handlePLayListClick = () => {
         margin: 0 10px;
         width: 90px;
       }
+
       .playList {
         width: 18px;
         height: 18px;
@@ -273,6 +484,30 @@ const handlePLayListClick = () => {
       font-size: 10px;
       margin-right: 30px;
     }
+  }
+}
+
+// 抽屉
+.songlist {
+  font-size: 14px;
+  text-align: center;
+
+  .start-text {
+    color: var(--color-black-primary);
+  }
+}
+.el-table {
+  :deep(.back-row-index) {
+    .el-text {
+      color: red;
+    }
+    color: red;
+  }
+
+  .el-text {
+    cursor: pointer;
+
+    font-size: 12px;
   }
 }
 </style>

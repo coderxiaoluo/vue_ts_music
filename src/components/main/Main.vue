@@ -33,6 +33,7 @@ watch(isRefresh, () => {
   box-sizing: border-box;
   // background-color: #e8e0e0;
   padding: 20px;
+  margin-bottom: 80px;
 }
 
 .fade-enter-from {

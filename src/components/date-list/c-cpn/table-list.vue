@@ -3,14 +3,22 @@
     class="table"
     :data="musicList"
     highlight-current-row
+    :row-class-name="rowIndexFn"
     stripe
     lazy
     v-loading="LOADING"
     element-loading-text="加载中..."
     style="width: 100%"
-    @row-dblclick="onplaydbClick"
+    @row-dblclick="onPlayDbClick"
   >
-    <el-table-column type="index" :index="indexMethod" />
+    <el-table-column type="index" :index="indexMethod">
+      <template #default="scope">
+        <span v-if="currentMusic.id !== scope.row.id">{{ scope.$index + 1 }}</span>
+        <svg v-else class="icon index-icon" aria-hidden="true">
+          <use xlink:href="#icon-yinle1"></use>
+        </svg>
+      </template>
+    </el-table-column>
     <el-table-column label="操作" width="90">
       <template #default>
         <div>
@@ -46,9 +54,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { formatDuration } from '@/utils/formatplay'
 
-defineProps({
+import { usePlayMusicStore } from '@/stores/play-music'
+import { storeToRefs } from 'pinia'
+
+const props = defineProps({
   musicList: {
     type: Array,
     default: () => {
@@ -60,23 +72,52 @@ defineProps({
     default: false
   }
 })
-
 const indexMethod = (index: number) => {
   return index + 1
 }
+
 // 双击播放
-const onplaydbClick = (v: any) => {
-  console.log(v)
+// 仓库
+const playMusicStore = usePlayMusicStore()
+
+// 是否播放
+const { isShowPlay, currentMusic } = storeToRefs(playMusicStore)
+
+function rowIndexFn({ row, rowIndex }: { row: any; rowIndex: any }) {
+  row.index = rowIndex
+
+  if (row.id === currentMusic.value?.id) {
+    return 'color-row-index'
+  }
+}
+const onPlayDbClick = (v: any) => {
+  // 双击时将全部的歌曲存储起来  再侧边栏进行展示
+  //  v:当前这首  props.musicList:全部
+  playMusicStore.savePlayMusicFn(v, props.musicList)
+  // 发送请求拿到音乐url
+  playMusicStore.getSongUrlAction(v.id)
 }
 </script>
 
 <style lang="less" scoped>
 .table {
-  --el-mask-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 
+  --el-mask-color: rgba(0, 0, 0, 0.5);
+  :deep(.color-row-index) {
+    color: rgb(210, 13, 13);
+    .el-text {
+      color: rgb(211, 17, 17);
+    }
+  }
   .el-table__cell {
     padding: 20px 0 !important;
     cursor: pointer;
+  }
+  .index-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
   .cell {
     --el-table-tr-bg-color: red;
