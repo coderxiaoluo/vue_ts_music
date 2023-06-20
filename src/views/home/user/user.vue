@@ -1,11 +1,6 @@
 <template>
   <div class="user">
-    <div
-      class="info-message animate__animated animate__flip"
-      :style="{
-        backgroundImage: `url(${bgImage}) `
-      }"
-    >
+    <div class="info-message animate__animated animate__flip">
       <div class="left animate__animated animate__bounceInDown">
         <h2 class="username">{{ userProfile.nickname }}</h2>
         <div class="avatar">
@@ -56,12 +51,12 @@ import { storeToRefs } from 'pinia'
 // 随机数
 import { randomMusic } from '@/utils/random'
 // 引入图片
-import { swiperList } from '@/assets/data/user-bg'
+// import { swiperList } from '@/assets/data/user-bg'
 // img
 import { imgURL } from '@/utils/img-url'
 
 //  TODO:  动态展示图片 有bug  可以换成判断性别切换动态背景  userProfile.value.gender
-const bgImage = imgURL(swiperList[randomMusic(1, swiperList.length)].url)
+// const bgImage = imgURL(swiperList[randomMusic(1, swiperList.length)].url)
 
 const userStore = useUserStore()
 const route = useRoute()
@@ -94,7 +89,7 @@ const handleMusicDetailClick = (v: any) => {
     height: calc(100vh - 85px);
     display: flex;
     justify-content: center;
-    // background: url('@/assets/img/bg3.jpg') no-repeat 100% 100%;
+    background: url('@/assets/img/bg3.jpg') no-repeat 100% 100%;
     background-position: 0 0;
     background-repeat: no-repeat;
     background-size: 100% 100%;

@@ -159,7 +159,8 @@ const handleRouteCLick = () => {
         font-size: 12px;
       }
       .desc {
-        margin-top: 10px;
+        margin-top: 8px;
+        font-size: 14px;
         color: var(--music-recommend-song-text);
       }
     }
