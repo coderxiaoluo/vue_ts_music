@@ -9,10 +9,10 @@ console.log(
   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝ 
                                                       
   `,
-  `color:#00a1cb;`
+  `color:#00a1cb;font-size:10px;`
 )
 
 console.log(
   `%c github地址:https://github.com/coderxiaoluo`,
-  `color:rgb(4, 118, 225); font-weight:900;   padding: 10px; font-size:20px;`
+  `color:rgb(4, 118, 225); font-weight:700;   padding: 1px; font-size:17px;`
 )

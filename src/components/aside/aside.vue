@@ -84,7 +84,6 @@ import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
 import { ref, watch } from 'vue'
 import { useMusicDetailStore } from '@/stores/music-detail'
-
 // 获取store
 const loginStore = useLoginStore()
 
@@ -95,7 +94,7 @@ const settingStore = useSettingStore()
 const { isFold } = storeToRefs(settingStore)
 
 // router持久化
-// const defaultRoute = ref(localCache.getCache('menuPath') ?? '/findmusic')
+// const defaultRoute = ref(localCache.getCache('asideRoute') ?? '/findmusic')
 const route = useRoute()
 // watch(route, (newVal) => {
 //   localCache.setCache('menuPath', newVal.path)
