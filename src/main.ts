@@ -11,7 +11,6 @@ import 'normalize.css'
 import 'element-plus/theme-chalk/el-message.css'
 import 'element-plus/dist/index.css'
 
-
 // wow.js animate.css
 import 'animate.css'
 import 'animate.css/animate.compat.css'
@@ -43,6 +42,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 // video
 import vue3videoPlay from 'vue3-video-play' // 引入组件
 import 'vue3-video-play/dist/style.css' // 引入css
+
+import '@/utils/console'
 
 app.use(store)
 app.use(router)

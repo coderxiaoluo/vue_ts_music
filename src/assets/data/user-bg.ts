@@ -50,20 +50,5 @@ export const swiperList: TypeSwiperList = [
     id: 10,
     url: 'bg10.jpg',
     desc: '图片10'
-  },
-  {
-    id: 11,
-    url: 'bg11.jpg',
-    desc: '图片11'
-  },
-  {
-    id: 12,
-    url: 'bg12.jpg',
-    desc: '图片12'
-  },
-  {
-    id: 13,
-    url: 'bg13.jpg',
-    desc: '图片13'
   }
 ]

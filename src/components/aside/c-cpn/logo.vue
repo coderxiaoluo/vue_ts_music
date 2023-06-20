@@ -1,8 +1,8 @@
 <template>
   <div class="logo" @click="onHomeClick">
-    <img v-if="isFold" :src="logo.logoimg" alt="logo" />
-    <img class="img2" v-else :src="logo.logoimg2" alt="logo" />
-    <h1 v-if="!isFold">{{ logo.title }}</h1>
+    <img v-if="!isFold" src="@/assets/img/logo/viteimgpng.png" alt="logo" />
+    <img class="img2" v-else src="@/assets/img/logo/logoimg4.png" alt="logo" />
+    <h1 v-if="!isFold">xiaoluomusic</h1>
   </div>
 </template>
 
@@ -21,10 +21,6 @@ const { isFold } = storeToRefs(settingStore)
 
 // logo点击
 const onHomeClick = () => {
-  // ElMessage({
-  //   message: '生活不是电影!',
-  //   type: 'success'
-  // })
   ElMessage({
     message: h('div', null, [
       h('span', { style: 'color: #0a90e3' }, '当前时间: '),
