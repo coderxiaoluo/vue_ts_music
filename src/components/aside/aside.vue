@@ -4,14 +4,7 @@
     <Logo></Logo>
     <!-- menu -->
     <el-scrollbar>
-      <el-menu
-        @open="handleOpen"
-        @close="handleClose"
-        :collapse="isFold"
-        router
-        default-active="/findmusic"
-        class="menu"
-      >
+      <el-menu :collapse="isFold" router default-active="/findmusic" class="menu">
         <el-menu-item index="/findmusic/recommend">
           <el-icon>
             <svg class="icon aside_video_icon" aria-hidden="true">
@@ -82,7 +75,6 @@ import { useRoute } from 'vue-router'
 import { useSettingStore } from '@/stores/setting'
 import { useLoginStore } from '@/stores/login'
 import { storeToRefs } from 'pinia'
-import { ref, watch } from 'vue'
 import { useMusicDetailStore } from '@/stores/music-detail'
 // 获取store
 const loginStore = useLoginStore()
@@ -93,20 +85,7 @@ const settingStore = useSettingStore()
 // 折叠变量
 const { isFold } = storeToRefs(settingStore)
 
-// router持久化
-// const defaultRoute = ref(localCache.getCache('asideRoute') ?? '/findmusic')
 const route = useRoute()
-// watch(route, (newVal) => {
-//   localCache.setCache('menuPath', newVal.path)
-//   defaultRoute.value = newVal.path
-// })
-
-const handleOpen = (key: string, keyPath: string[]) => {
-  // console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  // console.log(key, keyPath)
-}
 
 const musicDetailStore = useMusicDetailStore()
 

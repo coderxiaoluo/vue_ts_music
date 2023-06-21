@@ -54,21 +54,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 // import type { TabsPaneContext } from 'element-plus'
 import { localCache } from '@/utils/localCache'
 
+// tab 逻辑
 const activeName = ref(localCache.getCache('tabPaths')) ?? ref('/findmusic/recommend')
 
-// 切换路由
+// // 切换路由
 const router = useRouter()
+const route = useRoute()
+
 const handleClick = (tab: any, event: Event) => {
   const path = tab.props.name
   // 路由持久化
   localCache.setCache('tabPaths', path)
   router.push({ path })
 }
+
+watch(route, (newValue) => {
+  activeName.value = newValue.path
+})
 </script>
 
 <style lang="less" scoped>

@@ -91,7 +91,6 @@ musiclistStore.getBoutiqueDataListAction(currentName.value, limit.value)
 
 // 获取歌单
 const { playLists, total } = storeToRefs(musiclistStore)
-console.log(playLists)
 
 // 全部按钮
 const ontagAllClick = () => {
