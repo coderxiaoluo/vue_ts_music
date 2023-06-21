@@ -60,22 +60,16 @@ import { useRoute, useRouter } from 'vue-router'
 import { localCache } from '@/utils/localCache'
 
 // tab 逻辑
-const activeName = ref(localCache.getCache('tabPaths')) ?? ref('/findmusic/recommend')
+const activeName = ref('/findmusic/recommend')
 
 // // 切换路由
 const router = useRouter()
 const route = useRoute()
-
-const handleClick = (tab: any, event: Event) => {
+activeName.value = route.path
+const handleClick = (tab: any) => {
   const path = tab.props.name
-  // 路由持久化
-  localCache.setCache('tabPaths', path)
   router.push({ path })
 }
-
-watch(route, (newValue) => {
-  activeName.value = newValue.path
-})
 </script>
 
 <style lang="less" scoped>
