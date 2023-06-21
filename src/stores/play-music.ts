@@ -2,7 +2,7 @@ import { ref } from 'vue'
 
 import { defineStore } from 'pinia'
 
-import { getSongUrl } from '@/services/modules/play-song'
+import { getSongUrl, newSongUrlLevel } from '@/services/modules/play-song'
 
 import { localCache } from '@/utils/localCache'
 
@@ -13,7 +13,9 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
   // 双击拿到的全部播放列表
   const playMusicData = ref<any[]>([])
   // 音乐url
-  const musicUrl = ref<any>([])
+  const musicUrl = ref<any[]>([])
+  // 新版音乐 url
+  const newMusicUrl = ref<any[]>([])
 
   // 当前是否播放
   const isShowPlay = ref<boolean>(false)
@@ -22,10 +24,17 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
   const getSongUrlAction = async (id: any) => {
     const cookie = localCache.getCache('cookie')
     const result = await getSongUrl(id, cookie)
-    console.log(result)
+    // console.log(result)
     musicUrl.value = result.data
     // 当成功返回就将isShowPlay 改为 true
     if (result.code === 200) isShowPlay.value = true
+  }
+
+  // 拿到新版音乐url
+  const getNewSongUrlLevelAction = async (id: string) => {
+    const result = await newSongUrlLevel(id)
+    console.log(result)
+    // newMusicUrl.value = result
   }
 
   // 存储双击拿到的播放列表
@@ -48,6 +57,7 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
     playMusicData,
     savePlayMusicFn,
     getSongUrlAction,
+    getNewSongUrlLevelAction,
     setCurrentMusic
   }
 })

@@ -14,7 +14,14 @@
     </div>
     <!-- 按钮 -->
     <div class="buttons">
-      <el-button type="danger">播放全部</el-button>
+      <el-button type="danger" @click="onPlayAllClick">
+        <template #default>
+          <svg class="icon playIcon" aria-hidden="true">
+            <use xlink:href="#icon-bofang3"></use>
+          </svg>
+          <span>播放全部</span>
+        </template>
+      </el-button>
       <el-button>收藏</el-button>
       <el-button>分享</el-button>
     </div>
@@ -47,8 +54,13 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { usePlayMusicStore } from '@/stores/play-music'
+import { useMusicDetailStore } from '@/stores/music-detail'
 
 import { formatePayCount, formatMonthDay } from '@/utils/formatplay'
+// 歌词
+import { useRecordStore } from '@/stores/record'
 
 interface Props {
   playList: any
@@ -62,6 +74,31 @@ const onUserInfoClick = () => {
   router.push({
     path: `/user/${props.playList.userId}`
   })
+}
+//
+// 仓库
+const playMusicStore = usePlayMusicStore()
+// 歌词仓库
+const recordStore = useRecordStore()
+
+// musicDetailStore仓库
+const musicDetailStore = useMusicDetailStore()
+
+// 展示信息
+const { songsAll } = storeToRefs(musicDetailStore)
+
+// 播放全部按钮
+const onPlayAllClick = () => {
+  // 拿到 第一个歌曲 id
+  const firstMusic = songsAll.value[0]
+  //  v:当前这首  props.musicList:全部
+  playMusicStore.savePlayMusicFn(firstMusic, songsAll.value)
+  // 发送请求拿到音乐url
+  playMusicStore.getSongUrlAction(firstMusic.id)
+  // 发送请求拿到音乐url 新版
+  // playMusicStore.getNewSongUrlLevelAction(id)
+  // 拿到歌词
+  recordStore.getLyricDataAction(firstMusic.id)
 }
 </script>
 
@@ -95,6 +132,14 @@ const onUserInfoClick = () => {
     .userName {
       margin: 0 5px;
       font-size: 14px;
+    }
+  }
+
+  .buttons {
+    .playIcon {
+      width: 25px;
+      height: 25px;
+      margin-left: -10px;
     }
   }
   .tags {

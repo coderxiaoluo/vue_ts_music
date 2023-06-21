@@ -150,7 +150,7 @@ const audioEl = ref()
 //   if (musicUrl.value.length == 0) return
 // }
 
-// 设置顺序播放  / 循环播放 / 随机播放
+// 设置顺序播放  / 循环播放 / 随机播放 / 心动模式
 const svgArr = ['#icon-shunxubofang', '#icon-danquxunhuan', '#icon-suijibofang']
 let svgIndex = ref(0)
 

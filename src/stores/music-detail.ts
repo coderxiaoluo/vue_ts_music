@@ -10,7 +10,7 @@ import {
 
 export const useMusicDetailStore = defineStore('music-detail', () => {
   // 登录的所有歌曲
-  const songsAll = ref([])
+  const songsAll = ref<any>([])
   // 歌曲详情
   const playList = ref<any>({})
   // 没有登录展示20的数据

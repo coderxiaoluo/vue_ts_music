@@ -7,6 +7,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { localCache } from './utils/localCache'
 import WOW from 'wow.js'
 onMounted(() => {
   new WOW().init()

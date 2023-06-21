@@ -30,6 +30,34 @@
     >
       <Record v-show="true" />
     </el-drawer>
+
+    <!-- 弹窗 -->
+
+    <el-dialog
+      classy="homeDialog"
+      v-model="dialogVisible"
+      append-to-body
+      title="欢迎来到小罗音乐"
+      width="30%"
+      center
+    >
+      <div class="box">
+        <p>此项目仅供学习</p>
+        <p>原创不易,希望各位大哥点个start</p>
+        <p>
+          源码地址:
+          <a href="https://github.com/coderxiaoluo" target="_blank"
+            >https://github.com/coderxiaoluo</a
+          >
+        </p>
+        <p></p>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible = false"> 关闭 </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -52,6 +80,9 @@ import { useRecommendStore } from '@/stores/recommend'
 // 唱片store
 import { useRecordStore } from '@/stores/record'
 
+// 存储
+import { localCache } from '@/utils/localCache'
+
 const recordStore = useRecordStore()
 
 // 判断侧边栏展开
@@ -63,10 +94,14 @@ const recommendStore = useRecommendStore()
 recommendStore.getBannerDataAction()
 recommendStore.getRelatedDataListAction()
 
-//
-const drawer = ref(false)
-
 const { isRecordPage } = storeToRefs(recordStore)
+
+// 弹窗
+const UserLogo = ref(localCache.getCache('UserLogo'))
+const dialogVisible = ref(true)
+if (UserLogo.value) dialogVisible.value = false
+// 表示登录过 用来展示第一次弹框
+if (!localCache.getCache('UserLogo')) localCache.setCache('UserLogo', 'xiaoluoMusic')
 </script>
 
 <style lang="less" scoped>
@@ -100,5 +135,11 @@ const { isRecordPage } = storeToRefs(recordStore)
 }
 :deep(.el-drawer__body) {
   --el-drawer-padding-primary: 0 !important;
+}
+
+.box {
+  p {
+    margin: 10px 0;
+  }
 }
 </style>

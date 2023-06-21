@@ -100,6 +100,8 @@ const onPlayDbClick = (v: any) => {
   playMusicStore.savePlayMusicFn(v, props.musicList)
   // 发送请求拿到音乐url
   playMusicStore.getSongUrlAction(v.id)
+  // 发送请求拿到音乐url 新版
+  // playMusicStore.getNewSongUrlLevelAction(v.id)
   // 拿到歌词
   recordStore.getLyricDataAction(v.id)
 }
