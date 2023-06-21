@@ -4,6 +4,8 @@ import { defineStore } from 'pinia'
 
 import { getSongUrl } from '@/services/modules/play-song'
 
+import { localCache } from '@/utils/localCache'
+
 // 播放仓库
 export const usePlayMusicStore = defineStore('playMusic', () => {
   // 双击拿到当前这首
@@ -18,7 +20,9 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
 
   // 拿到音乐url
   const getSongUrlAction = async (id: any) => {
-    const result = await getSongUrl(id)
+    const cookie = localCache.getCache('cookie')
+    const result = await getSongUrl(id, cookie)
+    console.log(result)
     musicUrl.value = result.data
     // 当成功返回就将isShowPlay 改为 true
     if (result.code === 200) isShowPlay.value = true

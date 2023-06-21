@@ -14,20 +14,11 @@ export function getHotPlayListData() {
   })
 }
 
-// //  精品歌单标签列表
-// export function getHighQualityData() {
-//   return lRequest.get({
-//     url: '/playlist/highquality/tags'
-//   })
-// }
-
 export function getBoutiqueDataList(
   cat: string = '全部',
   limit: string | number = 100,
   offset: number = 100
 ) {
-  console.log(offset)
-
   return lRequest.get({
     url: `/top/playlist?limit=${limit}&order=cat&cat=${cat}&offset=${offset}`
   })

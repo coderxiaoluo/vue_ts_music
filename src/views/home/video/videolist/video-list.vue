@@ -39,6 +39,10 @@ const videoOption = reactive({
 </script>
 
 <style lang="less" scoped>
+.video-list {
+  padding: 20px;
+  box-sizing: border-box;
+}
 .video-top {
   display: flex;
   align-items: center;
