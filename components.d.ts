@@ -13,6 +13,7 @@ declare module 'vue' {
     Comment: typeof import('./src/components/comment/comment.vue')['default']
     CommentList: typeof import('./src/components/comment/c-cpn/comment-list.vue')['default']
     DateList: typeof import('./src/components/date-list/date-list.vue')['default']
+    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBadge: typeof import('element-plus/es')['ElBadge']

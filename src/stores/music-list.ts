@@ -25,11 +25,6 @@ export const useMusicListStore = defineStore('music-list', () => {
     const result = await getHotPlayListData()
     rightTag.value = result.tags
   }
-  // // 精品歌单标签列表
-  // const getHighQualityDataAction = async () => {
-  //   const result = await getHighQualityData()
-  //   console.log(result)
-  // }
   //  精品歌单标签列表
   const getBoutiqueDataListAction = async (
     cat?: string,
@@ -37,8 +32,6 @@ export const useMusicListStore = defineStore('music-list', () => {
     offset?: number
   ) => {
     const result = await getBoutiqueDataList(cat, limit, offset)
-    // more
-    // console.log(result)
     total.value = result.total
     playLists.value = result.playlists
   }

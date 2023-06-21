@@ -43,13 +43,10 @@ rankingStore.topRankingListAction()
 
 // 拿到数据
 const { mapItem, mapEndItem } = storeToRefs(rankingStore)
-console.log(mapItem)
-console.log(mapEndItem)
 
 // 点击跳转
 const router = useRouter()
 const onMusicDetailClick = (v: any) => {
-  console.log(v.id)
   router.push({
     path: `/musicdetail/${v.id}`
   })

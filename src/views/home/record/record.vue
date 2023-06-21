@@ -7,7 +7,7 @@
       }"
     ></div>
     <el-container>
-      <el-main class="main">
+      <el-main class="main" ref="mainRef">
         <div class="header">
           <el-icon @click="downBoldClick" class="downboldicon"><ArrowDownBold /></el-icon>
           <div class="demo-color-block">
@@ -59,16 +59,21 @@
         </div>
       </el-main>
     </el-container>
+
+    <div class="click" ontouchstart="toucuPlayColor(event)" onclick="playColor(event)">
+      <h1>五颜六色的点击特效</h1>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { localCache } from '@/utils/localCache'
 import { useRecordStore } from '@/stores/record'
 import { currentDuration } from '@/utils/formatplay'
 import { parseLyric } from '@/utils/parse_lyric'
+// import '@/utils/click'
 
 import { usePlayMusicStore } from '@/stores/play-music'
 
@@ -114,6 +119,10 @@ const downBoldClick = () => {
 </script>
 
 <style lang="less" scoped>
+.click {
+  width: 100%;
+  height: 100%;
+}
 .record {
   position: fixed;
   width: 100%;
@@ -297,7 +306,11 @@ const downBoldClick = () => {
       overflow-y: scroll;
       overflow-x: auto;
       padding-right: 40px;
-
+      /* 隐藏滚动条 */
+      scrollbar-width: none; /* firefox */
+      &::-webkit-scrollbar {
+        display: none; /* Chrome Safari */
+      }
       ul {
         position: absolute;
         width: 100%;

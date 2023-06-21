@@ -45,7 +45,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { formatePayCount } from '@/utils/formatplay'
-
 defineProps({
   songList: {
     type: Object,

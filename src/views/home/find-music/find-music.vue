@@ -59,7 +59,7 @@ import { useRouter } from 'vue-router'
 // import type { TabsPaneContext } from 'element-plus'
 import { localCache } from '@/utils/localCache'
 
-const activeName = ref(localCache.getCache('tabPaths')) ?? '/findmusic/recommend'
+const activeName = ref(localCache.getCache('tabPaths')) ?? ref('/findmusic/recommend')
 
 // 切换路由
 const router = useRouter()
