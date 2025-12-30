@@ -1,10 +1,31 @@
 <template>
   <div class="list-avatar animate__animated animate__backInLeft">
-    <swiper :effect="'cards'" :grabCursor="true" :modules="modules" class="swiper">
-      <swiper-slide> <img class="img" :src="playList.coverImgUrl" alt="图片信息" /></swiper-slide>
-      <template v-for="item in playList?.tracks" :key="item.id">
+    <swiper 
+      :effect="'cards'" 
+      :grabCursor="true" 
+      :modules="modules" 
+      class="swiper"
+      :preload-images="true"
+      :lazy="true"
+      :slides-per-view="1"
+      :space-between="0"
+      :initial-slide="0"
+    >
+      <swiper-slide>
+        <img 
+          class="img" 
+          :src="getOptimizedImageUrl(playList.coverImgUrl)" 
+          alt="图片信息" 
+          loading="eager"
+        />
+      </swiper-slide>
+      <template v-for="item in visibleTracks" :key="item.id">
         <swiper-slide>
-          <img :src="item.al.picUrl" :alt="item.name" />
+          <img 
+            :src="getOptimizedImageUrl(item.al.picUrl)" 
+            :alt="item.name" 
+            loading="lazy"
+          />
         </swiper-slide>
       </template>
     </swiper>
@@ -12,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue'
 // import required modules
@@ -21,10 +42,33 @@ import { EffectCards } from 'swiper'
 const modules = ref([EffectCards])
 
 interface Props {
-  playList: any
+  playList: {
+    coverImgUrl: string
+    tracks: Array<{
+      id: number
+      name: string
+      al: {
+        picUrl: string
+      }
+    }>
+  }
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+// 优化图片URL，添加尺寸参数，减少图片大小
+const getOptimizedImageUrl = (url: string | undefined): string => {
+  if (!url) return ''
+  // 检查是否已经有尺寸参数
+  if (url.includes('?param=')) return url
+  // 添加合适的尺寸参数，根据组件大小调整
+  return `${url}?param=200y200`
+}
+
+// 只显示前10首歌曲的图片，避免一次性加载过多图片
+const visibleTracks = computed(() => {
+  return props.playList.tracks?.slice(0, 10) || []
+})
 </script>
 
 <style lang="less" scoped>

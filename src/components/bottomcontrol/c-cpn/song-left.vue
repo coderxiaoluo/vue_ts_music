@@ -2,7 +2,7 @@
   <div class="song-left">
     <div v-if="currentMusic.al" class="left">
       <div class="img" @click="handleRecordClick">
-        <img :src="currentMusic.al?.picUrl" alt="" />
+        <img :src="getOptimizedImageUrl(currentMusic.al?.picUrl)" alt="" loading="eager" />
         <i v-if="!isRecordPage"
           ><el-icon><ArrowUpBold /></el-icon
         ></i>
@@ -34,6 +34,15 @@ interface Props {
   currentMusic: any
 }
 defineProps<Props>()
+
+// 优化图片URL，添加尺寸参数，减少图片大小
+const getOptimizedImageUrl = (url: string | undefined): string => {
+  if (!url) return ''
+  // 检查是否已经有尺寸参数
+  if (url.includes('?param=')) return url
+  // 添加合适的尺寸参数，根据组件大小调整
+  return `${url}?param=100y100`
+}
 
 const recordStore = useRecordStore()
 

@@ -9,8 +9,8 @@
         <template v-for="item in songList" :key="item.id">
           <div @click="onMusicDetailClick(item)" class="music-list">
             <div class="img-item">
-              <img v-if="!item.coverImgUrl" :src="item.picUrl" alt="" loading="lazy" />
-              <img v-else :src="item.coverImgUrl" alt="" loading="lazy" />
+              <img v-if="!item.coverImgUrl" :src="getOptimizedImageUrl(item.picUrl)" alt="" loading="lazy" />
+              <img v-else :src="getOptimizedImageUrl(item.coverImgUrl)" alt="" loading="lazy" />
               <svg class="icon play-icon" aria-hidden="true">
                 <use xlink:href="#icon-bofang3"></use>
               </svg>
@@ -27,7 +27,7 @@
         <template v-for="item in songList" :key="item.id">
           <div @click="onMusicDetailClick(item)" class="music-list">
             <div class="img-item">
-              <img :src="item.coverImgUrl" alt="" loading="lazy" />
+              <img :src="getOptimizedImageUrl(item.coverImgUrl)" alt="" loading="lazy" />
               <svg class="icon play-icon" aria-hidden="true">
                 <use xlink:href="#icon-bofang3"></use>
               </svg>
@@ -65,6 +65,16 @@ defineProps({
     }
   }
 })
+
+// 优化图片URL，添加尺寸参数，减少图片大小
+const getOptimizedImageUrl = (url: string | undefined): string => {
+  if (!url) return ''
+  // 检查是否已经有尺寸参数
+  if (url.includes('?param=')) return url
+  // 添加合适的尺寸参数，根据组件大小调整
+  return `${url}?param=200y200`
+}
+
 // 去到详情页
 const router = useRouter()
 

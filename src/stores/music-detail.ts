@@ -48,6 +48,13 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
   // 未登录展示的收藏者
   const subScriber = ref<any[]>([])
 
+  // 虚拟滚动相关
+  const virtualScroll = ref({
+    visibleCount: 20, // 可见区域显示的行数
+    itemHeight: 60, // 每行高度
+    scrollTop: 0 // 当前滚动位置
+  })
+
   // 加载状态分离，避免冲突
   const isDetailsLoading = ref<boolean>(false)
   const isTracksLoading = ref<boolean>(false)
@@ -61,6 +68,24 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
   const currentTracks = computed(() => {
     return songsAll.value.length > 0 ? songsAll.value : tracksList.value
   })
+
+  // 计算属性：当前可见的歌曲列表（用于虚拟滚动）
+  const visibleTracks = computed(() => {
+    const tracks = currentTracks.value
+    if (tracks.length <= virtualScroll.value.visibleCount) {
+      return tracks // 数据量小，不需要虚拟滚动
+    }
+
+    const startIndex = Math.floor(virtualScroll.value.scrollTop / virtualScroll.value.itemHeight)
+    const endIndex = Math.min(startIndex + virtualScroll.value.visibleCount + 5, tracks.length)
+
+    return tracks.slice(startIndex, endIndex)
+  })
+
+  // 更新滚动位置
+  const updateScrollTop = (scrollTop: number) => {
+    virtualScroll.value.scrollTop = scrollTop
+  }
 
   // 没有登录调用这个
   const getDetailsDataListAllAction = async (id: string) => {
@@ -95,7 +120,13 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
         cache: true,
         cacheKey: `playlist_tracks_${id}_${limit}`
       })
-      songsAll.value = result.songs || []
+
+      if (result.songs) {
+        // 使用requestAnimationFrame确保在浏览器空闲时更新DOM，避免卡顿
+        requestAnimationFrame(() => {
+          songsAll.value = result.songs || []
+        })
+      }
     } catch (error) {
       console.error('获取歌单歌曲失败:', error)
       songsAll.value = [] // 确保数据为空，避免显示旧数据
@@ -121,6 +152,9 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
     subScriber,
     LOADING,
     currentTracks,
+    visibleTracks,
+    virtualScroll,
+    updateScrollTop,
     getDetailsDataListAllAction,
     getTrackAllDataAction,
     clearData
