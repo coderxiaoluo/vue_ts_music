@@ -8,9 +8,8 @@
 
 ## 📸 项目截图
 
-![首页截图](https://tuchuangs.com/imgs/2023/06/20/4c4a668f17346c80.png)
+<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/ef39061d-3331-4f34-a5ed-1ee6825bcdbb" />
 
-![播放页面截图](https://tuchuangs.com/imgs/2023/06/20/31abe5e3501466d6.png)
 
 ## ✨ 功能特性
 
