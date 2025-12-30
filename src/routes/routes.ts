@@ -1,5 +1,5 @@
-// import type { RouteRecordRaw } from 'vue-router'
-export const routes = [
+import type { RouteRecordRaw } from 'vue-router'
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/views/home/home.vue'),
@@ -8,39 +8,26 @@ export const routes = [
       {
         path: '/findmusic',
         name: 'Find',
-        component: () => import('../views/home/find-music/find-music.vue')
-      }
-    ]
-  },
-
-  // 四个嵌套路由
-  {
-    path: '/findmusic',
-    component: () => import('../views/home/home.vue'),
-    children: [
-      {
-        path: '/findmusic',
-        name: 'Find',
         component: () => import('../views/home/find-music/find-music.vue'),
         children: [
           // 个性推荐
           {
-            path: '/findmusic/recommend',
+            path: 'recommend',
             name: 'Recommend',
             component: () => import('../views/home/find-music/recommend/recommend.vue')
           },
           {
-            path: '/findmusic/musiclist',
+            path: 'musiclist',
             name: 'Musiclist',
             component: () => import('../views/home/find-music/musiclist/music-list.vue')
           },
           {
-            path: '/findmusic/ranking',
+            path: 'ranking',
             name: 'Ranking',
             component: () => import('../views/home/find-music/ranking/ranking.vue')
           },
           {
-            path: '/findmusic/singer',
+            path: 'singer',
             name: 'Singer',
             component: () => import('../views/home/find-music/singer/singer.vue')
           }
@@ -48,8 +35,7 @@ export const routes = [
       }
     ]
   },
-  // 二级路由
-  // video
+  // 视频路由
   {
     path: '/video',
     component: () => import('@/views/home/home.vue'),
@@ -61,12 +47,12 @@ export const routes = [
         component: () => import('@/views/home/video/video.vue'),
         children: [
           {
-            path: '/video/video-list',
+            path: 'video-list',
             name: 'VideoList',
             component: () => import('@/views/home/video/videolist/video-list.vue')
           },
           {
-            path: '/video/mv-list',
+            path: 'mv-list',
             name: 'MvList',
             component: () => import('@/views/home/video/mvlist/mv-list.vue')
           }
@@ -75,16 +61,14 @@ export const routes = [
     ]
   },
 
-  // 详情
+  // 歌单详情
   {
-    name: 'MusicDetail',
     path: '/musicdetail/:id',
     component: () => import('@/views/home/home.vue'),
-    redirect: '/musicdetail/:id',
     children: [
       {
-        path: '/musicdetail/:id',
-        name: 'MusicDetails',
+        path: '',
+        name: 'MusicDetail',
         component: () => import('@/views/home/musicdetail/music-detail.vue')
       }
     ]
@@ -95,10 +79,9 @@ export const routes = [
     path: '/user/:id',
     name: 'User',
     component: () => import('@/views/home/home.vue'),
-    redirect: '/user/:id',
     children: [
       {
-        path: '/user/:id',
+        path: '',
         component: () => import('@/views/home/user/user.vue')
       }
     ]

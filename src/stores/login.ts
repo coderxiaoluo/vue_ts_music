@@ -108,7 +108,6 @@ export const useLoginStore = defineStore('login', () => {
     if (data.code == 200) {
       // 用户歌单列表
       const res = await getUserPlayList(data.account.id)
-      console.log(res)
       userplaylist.value = res.playlist
       localCache.setCache('userplaylist', res.playlist)
 
@@ -134,19 +133,16 @@ export const useLoginStore = defineStore('login', () => {
 
   // 发送验证码
   async function getCaptchaSentAction(phone: number) {
-    const reult = getCaptchaSent(phone)
-    console.log(reult)
+    await getCaptchaSent(phone)
   }
 
   // 验证验证码
   async function getCaptchaVerifyAction(phone: number, verify: number) {
     const result = await getCaptchaVerify(phone, verify)
-    console.log(result.data)
     // 手机号登录成功
     if (result.data) {
-      console.log(result)
       // getStatusAction()
-      console.log('登录成功')
+      ElMessage.success('登录成功')
     }
   }
   // 退出登录
@@ -154,7 +150,7 @@ export const useLoginStore = defineStore('login', () => {
     const result = await getExitLogout()
     // 退出成功
     if (result.code === 200) {
-      console.log('退出登录成功!')
+      ElMessage.success('退出登录成功!')
       isStatus.value = false
       localCache.clearCache()
     }

@@ -99,7 +99,9 @@ const onBlurChange = () => {
 
 // 点击热搜跳转search页面
 const handleSearchPageClick = (v: any) => {
-  console.log(v)
+  // 跳转到搜索页面
+  searchStore.setSearchValue(v)
+  router.push('/search')
 }
 
 // input 回车触发
