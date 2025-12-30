@@ -58,7 +58,4 @@ declare module 'vue' {
     TableList: typeof import('./src/components/date-list/c-cpn/table-list.vue')['default']
     UserInfo: typeof import('./src/components/header/c-cpn/user-info/user-info.vue')['default']
   }
-  export interface ComponentCustomProperties {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
-  }
 }
