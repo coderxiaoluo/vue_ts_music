@@ -5,11 +5,14 @@
     highlight-current-row
     :row-class-name="rowIndexFn"
     stripe
-    lazy
+    :row-key="(row) => row.id"
     v-loading="LOADING"
     element-loading-text="加载中..."
     style="width: 100%"
     @row-dblclick="onPlayDbClick"
+    border
+    fit
+    :max-height="600"
   >
     <el-table-column type="index" :index="indexMethod">
       <template #default="scope">
