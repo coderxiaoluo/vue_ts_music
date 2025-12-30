@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 import { ElDrawer } from 'element-plus'
 
@@ -139,15 +139,24 @@ function canplayLoad() {
   audioEl.value.play()
 }
 
-// 点击开始播放
+// 优化的播放/暂停函数
 const playPause = () => {
-  if (musicUrl.value.length == 0) return
+  if (!audioEl.value) return
+
+  // 直接操作DOM，减少响应式依赖
+  const audio = audioEl.value
+
   if (isShowPlay.value) {
-    audioEl.value.pause()
-    isShowPlay.value = false
+    // 使用requestAnimationFrame确保DOM更新在浏览器下一次重绘前执行
+    requestAnimationFrame(() => {
+      audio.pause()
+      isShowPlay.value = false
+    })
   } else {
-    audioEl.value.play()
-    isShowPlay.value = true
+    requestAnimationFrame(() => {
+      audio.play()
+      isShowPlay.value = true
+    })
   }
 }
 
@@ -307,17 +316,42 @@ function overAudio() {
     recordStore.getLyricDataAction(playMusicData.value[random].id)
   }
 }
+// 节流函数，限制函数执行频率
+const throttle = (func: Function, delay: number) => {
+  let lastCall = 0
+  return function (...args: any[]) {
+    const now = Date.now()
+    if (now - lastCall >= delay) {
+      lastCall = now
+      func.apply(this, args)
+    }
+  }
+}
+
+// 使用节流优化的时间更新函数
+const throttledTimeUpdate = throttle(() => {
+  if (!audioEl.value) return
+
+  // 格式化时间
+  const currentTime = audioEl.value.currentTime
+  const duration = audioEl.value.duration
+
+  // 只有当音频有有效时长时才更新
+  if (duration > 0) {
+    currentTimes.value = currentTime
+    const tmpTime = currentTime / duration
+    const newOffset = Math.floor(100 * tmpTime)
+
+    // 只有当值发生变化时才更新，减少不必要的响应式更新
+    if (newOffset !== sliderbar.value) {
+      sliderbar.value = newOffset
+    }
+  }
+}, 100) // 每100ms执行一次，约10fps
+
 // 当时间改变时触发
 function onTimeupDateMusic() {
-  // 格式化时间
-  currentTimes.value = audioEl.value?.currentTime
-  // 计算当前时间是总时间的百分比   当前时间 / 总时间
-  currentTime.value = audioEl.value?.currentTime
-  durationTime.value = audioEl.value?.duration
-  const tmpTime = currentTime.value / durationTime.value
-  tmpOffsetTime.value = Math.floor(100 * tmpTime)
-  // 给值赋值给滑块
-  sliderbar.value = tmpOffsetTime.value
+  throttledTimeUpdate()
 }
 
 // 音量
