@@ -1,4 +1,4 @@
-# 小波音乐 (xiaoluoMusic)
+# 小波音乐 (xiaoboMusic)
 
 一个基于 Vue 3 + TypeScript + Pinia 开发的现代化音乐播放器，提供流畅的音乐播放体验和丰富的音乐资源。
 
@@ -192,8 +192,8 @@ npm run format
 
 如有问题或建议，欢迎通过以下方式联系：
 
-- GitHub Issues：[https://github.com/coderxiaoluo/vue_ts_music/issues](https://github.com/coderxiaoluo/vue_ts_music/issues)
-- 邮箱：coderxiaoluo@example.com
+- GitHub Issues：[https://github.com/coderxiaoluo/vue3-ts-netease-music](https://github.com/coderxiaoluo/vue3-ts-netease-music)
+- 邮箱：1195646651@qq.com
 
 ## 🙏 致谢
 
