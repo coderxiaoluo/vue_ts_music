@@ -30,8 +30,8 @@
 
 <script setup lang="ts">
 import { useRecordStore } from '@/stores/record'
-import { storeToRefs, watch } from 'pinia'
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { storeToRefs } from 'pinia'
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 
 interface Props {
   currentMusic: any
