@@ -1,15 +1,14 @@
 <template>
   <div class="record">
-    <div
-      :class="{ 'bgc-filer': isBgcColor }"
-      :style="{
-        'background-image': `url(${currentMusic.al?.picUrl}) `
-      }"
-    ></div>
+    <div :class="{ 'bgc-filer': isBgcColor }" :style="{
+      'background-image': `url(${currentMusic.al?.picUrl}) `
+    }"></div>
     <el-container>
       <el-main class="main" ref="mainRef">
         <div class="header">
-          <el-icon @click="downBoldClick" class="downboldicon"><ArrowDownBold /></el-icon>
+          <el-icon @click="downBoldClick" class="downboldicon">
+            <ArrowDownBold />
+          </el-icon>
           <div class="demo-color-block">
             <svg @click="ChangeBackgroundClick" class="icon playicon" aria-hidden="true">
               <use xlink:href="#icon-pokeball"></use>
@@ -27,21 +26,23 @@
               <img class="discImg" src="@/assets/img/MusicDetailCard/disc.png" alt="" />
             </div>
             <div class="desc-box">
-              <img
-                :class="{ 'descbgc-img': true, discAnimation: isShowPlay }"
-                :src="currentMusic?.al?.picUrl"
-                alt=""
-              />
+              <img :class="{ 'descbgc-img': true, discAnimation: isShowPlay }" :src="currentMusic?.al?.picUrl" alt="" />
             </div>
           </div>
           <!-- 右边歌词 -->
           <div class="right-lyric">
             <!-- 标题相关 -->
             <div class="title">
-              <p class="musicName">{{ currentMusic.name }}</p>
-              <p class="album">专辑:{{ currentMusic.al?.name }}</p>
-              <template v-for="t in currentMusic.ar" :key="t.name">
-                <p class="album">歌手: {{ t.name }}</p>
+              <div class="marquee-container">
+                <p ref="musicNameRef" class="musicName marquee-text">{{ currentMusic.name }}</p>
+              </div>
+              <div class="marquee-container">
+                <p ref="albumNameRef" class="album marquee-text">专辑:{{ currentMusic.al?.name }}</p>
+              </div>
+              <template v-for="(t, index) in currentMusic.ar" :key="t.name">
+                <div class="marquee-container">
+                  <p :ref="el => singerRefs[index] = el" class="album marquee-text">歌手: {{ t.name }}</p>
+                </div>
               </template>
             </div>
 
@@ -67,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { localCache } from '@/utils/localCache'
 import { useRecordStore } from '@/stores/record'
@@ -116,6 +117,88 @@ watch(lyricTime, (newvalue) => {
 const downBoldClick = () => {
   recordStore.setIsRecordPageFn()
 }
+
+// 文字滚动相关
+const musicNameRef = ref<HTMLElement>()
+const albumNameRef = ref<HTMLElement>()
+const singerRefs = ref<(HTMLElement | undefined)[]>([])
+let animations: number[] = []
+
+// 实现文字滚动效果
+const startMarquee = (element: HTMLElement | undefined) => {
+  if (!element) return
+
+  const container = element.parentElement
+  if (!container) return
+
+  const containerWidth = container.clientWidth
+  const textWidth = element.scrollWidth
+
+  // 如果文字宽度小于容器宽度，不需要滚动
+  if (textWidth <= containerWidth) return
+
+  let offset = 0
+  const speed = 0.8 // 滚动速度
+
+  const animate = () => {
+    offset -= speed
+    if (offset <= -textWidth) {
+      offset = containerWidth
+    }
+    element.style.transform = `translateX(${offset}px)`
+
+    const animationId = requestAnimationFrame(animate)
+    animations.push(animationId)
+  }
+
+  animate()
+}
+
+// 停止文字滚动
+const stopMarquee = () => {
+  animations.forEach(id => cancelAnimationFrame(id))
+  animations = []
+}
+
+// 重置文字位置
+const resetMarquee = (element: HTMLElement | undefined) => {
+  if (element) {
+    element.style.transform = 'translateX(0)'
+  }
+}
+
+// 监听歌曲变化，重置并重新开始滚动
+watch(() => currentMusic.id, async (newId, oldId) => {
+  if (newId !== oldId) {
+    // 停止当前动画
+    stopMarquee()
+
+    // 重置位置
+    resetMarquee(musicNameRef.value)
+    resetMarquee(albumNameRef.value)
+    singerRefs.value.forEach(ref => resetMarquee(ref))
+
+    // 重置歌手ref数组
+    singerRefs.value = []
+
+    // 等待DOM更新后重新开始动画
+    await nextTick()
+    startMarquee(musicNameRef.value)
+    startMarquee(albumNameRef.value)
+    singerRefs.value.forEach(ref => startMarquee(ref))
+  }
+})
+
+onMounted(async () => {
+  await nextTick()
+  startMarquee(musicNameRef.value)
+  startMarquee(albumNameRef.value)
+  singerRefs.value.forEach(ref => startMarquee(ref))
+})
+
+onUnmounted(() => {
+  stopMarquee()
+})
 </script>
 
 <style lang="less" scoped>
@@ -123,6 +206,7 @@ const downBoldClick = () => {
   width: 100%;
   height: 100%;
 }
+
 .record {
   position: fixed;
   width: 100%;
@@ -148,11 +232,13 @@ const downBoldClick = () => {
 .main {
   width: 100%;
   margin: 0 auto;
+
   .header {
     height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .downboldicon {
       font-size: 25px;
       cursor: pointer;
@@ -171,17 +257,20 @@ const downBoldClick = () => {
         width: 20px;
         height: 20px;
       }
+
       .quanpingicon {
         background-color: v-bind(bgcColor);
         font-size: 12px;
         margin-left: 10px;
       }
     }
+
     .demo-color-block .demonstration {
       margin-right: 16px;
     }
   }
 }
+
 // top
 .content {
   display: flex;
@@ -204,17 +293,20 @@ const downBoldClick = () => {
       top: 25px;
       width: 150px;
       height: 100px;
+
       .needleImg {
         width: 100%;
         height: 100%;
       }
     }
+
     .record-img {
       position: absolute;
       bottom: 50px;
       width: 100%;
       border-radius: 50%;
       box-shadow: 0 0 0 10px #ccc;
+
       .discImg {
         width: 100%;
         height: 100%;
@@ -242,11 +334,13 @@ const downBoldClick = () => {
         transition: transform 1s linear 0s;
       }
     }
+
     .desc-box:hover {
       .descbgcimg {
         transform: scale(1.1);
       }
     }
+
     /* 碟子设置旋转动画 */
     .discAnimation {
       /* infinite动画无限循环 */
@@ -259,6 +353,7 @@ const downBoldClick = () => {
       from {
         transform: rotate(0deg);
       }
+
       to {
         transform: rotate(360deg);
       }
@@ -273,25 +368,44 @@ const downBoldClick = () => {
       z-index: 99;
     }
   }
+
   .right-lyric {
     width: 400px;
     height: 500px;
     // background-color: rgb(209, 27, 206);
     margin-left: 30px;
     z-index: 77;
+
     // overflow: hidden;
     .title {
       width: 100%;
       text-align: center;
 
+      // 文字滚动容器样式
+      .marquee-container {
+        overflow: hidden;
+        position: relative;
+        white-space: nowrap;
+        margin: 8px 0;
+
+        .marquee-text {
+          display: inline-block;
+          white-space: nowrap;
+          transition: transform 0.1s linear;
+        }
+      }
+
       .musicName {
         font-size: 30px;
+        margin: 0;
       }
 
       .album {
-        margin: 10px 0;
-        font-size: 12px;
+        margin: 0;
+        font-size: 14px;
+        color: #666;
       }
+
       .singer {
         font-size: 12px;
       }
@@ -307,21 +421,27 @@ const downBoldClick = () => {
       overflow-x: auto;
       padding-right: 40px;
       /* 隐藏滚动条 */
-      scrollbar-width: none; /* firefox */
+      scrollbar-width: none;
+
+      /* firefox */
       &::-webkit-scrollbar {
-        display: none; /* Chrome Safari */
+        display: none;
+        /* Chrome Safari */
       }
+
       ul {
         position: absolute;
         width: 100%;
         text-align: center;
         top: 180px;
         z-index: 88;
+
         li {
           height: 60px;
           font-size: 16px;
           color: #343333;
         }
+
         li.active {
           color: #000;
           font-weight: 900;
