@@ -34,10 +34,10 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
   const currentMusic = ref<MusicItem>({} as MusicItem)
   // 双击拿到的全部播放列表
   const playMusicData = ref<MusicItem[]>([])
-  // 音乐url
-  const musicUrl = ref<MusicUrlItem[]>([])
+  // 音乐url 缓存池，支持预加载
+  const musicUrl = ref<Map<number, MusicUrlItem>>(new Map())
   // 新版音乐 url
-  const newMusicUrl = ref<MusicUrlItem[]>([])
+  const newMusicUrl = ref<Map<number, MusicUrlItem>>(new Map())
 
   // 当前是否播放
   const isShowPlay = ref<boolean>(false)
@@ -53,7 +53,14 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
   // 计算属性：当前播放的音乐URL
   const currentMusicUrl = computed(() => {
     if (!currentMusic.value.id) return ''
-    const urlItem = musicUrl.value.find(item => item.id === currentMusic.value.id)
+    const urlItem = musicUrl.value.get(currentMusic.value.id)
+    return urlItem?.url || ''
+  })
+
+  // 计算属性：当前播放的高品质音乐URL
+  const currentNewMusicUrl = computed(() => {
+    if (!currentMusic.value.id) return ''
+    const urlItem = newMusicUrl.value.get(currentMusic.value.id)
     return urlItem?.url || ''
   })
 
@@ -77,11 +84,21 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
   }
 
   // 拿到音乐url
-  const getSongUrlAction = async (id: number) => {
-    if (isLoading.value) return // 防止重复请求
+  const getSongUrlAction = async (id: number, preload = false) => {
+    // 如果已经有缓存，直接返回
+    if (musicUrl.value.has(id)) {
+      if (!preload) {
+        isShowPlay.value = true
+      }
+      return
+    }
 
-    isLoading.value = true
-    error.value = null
+    if (isLoading.value && !preload) return // 防止重复请求，预加载除外
+
+    if (!preload) {
+      isLoading.value = true
+      error.value = null
+    }
 
     try {
       const cookie = localCache.getCache('cookie') || ''
@@ -90,45 +107,91 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
         cacheKey: `song_url_${id}`
       })
 
-      if (result.code === 200) {
-        musicUrl.value = result.data || []
-        isShowPlay.value = true
+      if (result.code === 200 && result.data) {
+        // 存储到Map中
+        result.data.forEach((item: MusicUrlItem) => {
+          musicUrl.value.set(item.id, item)
+        })
+
+        if (!preload) {
+          isShowPlay.value = true
+        }
+
+        // 预加载下一首歌曲
+        preloadNextSong(id)
       }
     } catch (err) {
-      error.value = '获取音乐地址失败'
-      console.error('获取音乐地址失败:', err)
+      if (!preload) {
+        error.value = '获取音乐地址失败'
+        console.error('获取音乐地址失败:', err)
+      }
     } finally {
-      isLoading.value = false
+      if (!preload) {
+        isLoading.value = false
+      }
     }
   }
 
   // 拿到新版音乐url
-  const getNewSongUrlLevelAction = async (id: string) => {
-    if (isNewUrlLoading.value) return // 防止重复请求
+  const getNewSongUrlLevelAction = async (id: string, preload = false) => {
+    const musicId = Number(id)
+    // 如果已经有缓存，直接返回
+    if (newMusicUrl.value.has(musicId)) {
+      return
+    }
 
-    isNewUrlLoading.value = true
-    newUrlError.value = null
+    if (isNewUrlLoading.value && !preload) return // 防止重复请求，预加载除外
+
+    if (!preload) {
+      isNewUrlLoading.value = true
+      newUrlError.value = null
+    }
 
     try {
       const result = await newSongUrlLevel(id, 'jymaster', {
         cache: true,
         cacheKey: `new_song_url_${id}`
       })
-      newMusicUrl.value = result.data || []
+
+      if (result.code === 200 && result.data) {
+        // 存储到Map中
+        result.data.forEach((item: MusicUrlItem) => {
+          newMusicUrl.value.set(item.id, item)
+        })
+      }
     } catch (err) {
-      newUrlError.value = '获取高品质音乐地址失败'
-      console.error('获取高品质音乐地址失败:', err)
+      if (!preload) {
+        newUrlError.value = '获取高品质音乐地址失败'
+        console.error('获取高品质音乐地址失败:', err)
+      }
     } finally {
-      isNewUrlLoading.value = false
+      if (!preload) {
+        isNewUrlLoading.value = false
+      }
     }
+  }
+
+  // 预加载下一首歌曲
+  const preloadNextSong = (currentId: number) => {
+    const currentIndex = playMusicData.value.findIndex(item => item.id === currentId)
+    if (currentIndex === -1 || currentIndex >= playMusicData.value.length - 1) {
+      return // 已经是最后一首，不需要预加载
+    }
+
+    const nextIndex = currentIndex + 1
+    const nextSong = playMusicData.value[nextIndex]
+
+    // 预加载下一首歌曲的普通音质和高品质音质
+    getSongUrlAction(nextSong.id, true)
+    getNewSongUrlLevelAction(String(nextSong.id), true)
   }
 
   // 清空播放列表
   function clearPlayList() {
     currentMusic.value = {} as MusicItem
     playMusicData.value = []
-    musicUrl.value = []
-    newMusicUrl.value = []
+    musicUrl.value.clear()
+    newMusicUrl.value.clear()
     isShowPlay.value = false
   }
 
@@ -167,12 +230,14 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
     error,
     newUrlError,
     currentMusicUrl,
+    currentNewMusicUrl,
     savePlayMusicFn,
     setCurrentMusic,
     getSongUrlAction,
     getNewSongUrlLevelAction,
     clearPlayList,
     nextMusic,
-    prevMusic
+    prevMusic,
+    preloadNextSong
   }
 })

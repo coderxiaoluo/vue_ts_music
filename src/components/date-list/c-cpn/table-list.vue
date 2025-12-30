@@ -1,19 +1,7 @@
 <template>
-  <el-table
-    class="table"
-    :data="musicList"
-    highlight-current-row
-    :row-class-name="rowIndexFn"
-    stripe
-    :row-key="(row) => row.id"
-    v-loading="LOADING"
-    element-loading-text="加载中..."
-    style="width: 100%"
-    @row-dblclick="onPlayDbClick"
-    border
-    fit
-    :max-height="600"
-  >
+  <el-table class="table" :data="LOADING ? [] : musicList" highlight-current-row :row-class-name="rowIndexFn" stripe
+    :row-key="(row) => row.id" v-loading="LOADING" element-loading-text="加载中..." style="width: 100%"
+    @row-dblclick="onPlayDbClick" border fit :max-height="600" :empty-text="LOADING ? '' : '暂无数据'">
     <el-table-column type="index" :index="indexMethod">
       <template #default="scope">
         <span v-if="currentMusic.id !== scope.row.id">{{ scope.$index + 1 }}</span>
@@ -115,26 +103,33 @@ const onPlayDbClick = (v: any) => {
   cursor: pointer;
 
   --el-mask-color: rgba(0, 0, 0, 0.5);
+
   :deep(.color-row-index) {
     color: rgb(210, 13, 13);
+
     .el-text {
       color: rgb(211, 17, 17);
     }
   }
+
   .el-table__cell {
     padding: 20px 0 !important;
     cursor: pointer;
   }
+
   .index-icon {
     font-size: 20px;
     width: 20px;
     height: 20px;
   }
+
   .cell {
     --el-table-tr-bg-color: red;
+
     .singer {
       display: flex;
     }
+
     .table_icon {
       width: 20px;
       height: 20px;

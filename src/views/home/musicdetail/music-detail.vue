@@ -71,7 +71,9 @@ const fetchPlaylistData = async () => {
     // 然后根据登录状态决定是否获取全部歌曲
     if (isStatus.value) {
       // 登录了，获取全部歌曲
-      await musicDetailStore.getTrackAllDataAction(id, playList.value.trackCount)
+      // 不使用await，让歌曲列表加载在后台进行，提高页面响应速度
+      // 特别是"我喜欢的音乐"歌单，歌曲数量可能很大
+      musicDetailStore.getTrackAllDataAction(id, playList.value.trackCount)
     }
   } catch (error) {
     console.error('获取歌单数据失败:', error)

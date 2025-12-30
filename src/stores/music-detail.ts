@@ -47,21 +47,21 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
   const tracksList = ref<MusicItem[]>([])
   // 未登录展示的收藏者
   const subScriber = ref<any[]>([])
-  
+
   // 加载状态分离，避免冲突
   const isDetailsLoading = ref<boolean>(false)
   const isTracksLoading = ref<boolean>(false)
-  
+
   // 计算属性：总加载状态
   const LOADING = computed(() => {
     return isDetailsLoading.value || isTracksLoading.value
   })
-  
+
   // 计算属性：当前显示的歌曲列表
   const currentTracks = computed(() => {
     return songsAll.value.length > 0 ? songsAll.value : tracksList.value
   })
-  
+
   // 没有登录调用这个
   const getDetailsDataListAllAction = async (id: string) => {
     isDetailsLoading.value = true
@@ -83,12 +83,12 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
 
   // 登录调用这个
   const getTrackAllDataAction = async (id: string | number, trackCount?: any) => {
-    // 当超过5000条,只发送200条，避免请求过大
-    const limit = trackCount > 5000 ? 300 : (trackCount || 500)
-    
-    // 如果已经有数据，不再重复请求
-    if (songsAll.value.length > 0) return
-    
+    // 限制最大获取数量为300，避免请求过大导致卡顿，尤其是"我喜欢的音乐"歌单
+    const limit = Math.min(trackCount || 200, 300)
+
+    // 如果已经有数据且ID匹配，不再重复请求
+    if (songsAll.value.length > 0 && playList.value.id === Number(id)) return
+
     isTracksLoading.value = true
     try {
       const result = await getTrackAllData(id, limit, {
@@ -98,6 +98,7 @@ export const useMusicDetailStore = defineStore('music-detail', () => {
       songsAll.value = result.songs || []
     } catch (error) {
       console.error('获取歌单歌曲失败:', error)
+      songsAll.value = [] // 确保数据为空，避免显示旧数据
     } finally {
       isTracksLoading.value = false
     }

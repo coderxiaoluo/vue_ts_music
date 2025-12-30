@@ -4,14 +4,8 @@
     <Logo></Logo>
     <!-- menu -->
     <el-scrollbar>
-      <el-menu
-        @open="handleOpen"
-        @close="handleClose"
-        :collapse="isFold"
-        router
-        default-active="/findmusic"
-        class="menu"
-      >
+      <el-menu @open="handleOpen" @close="handleClose" :collapse="isFold" router default-active="/findmusic"
+        class="menu">
         <el-menu-item index="/findmusic/recommend">
           <el-icon>
             <svg class="icon aside_video_icon" aria-hidden="true">
@@ -41,11 +35,8 @@
               <span>我的歌单</span>
             </template>
             <template v-for="(item, index) in userplaylist" :key="index">
-              <el-menu-item
-                @click="onHandleClick(item)"
-                :index="'/musicdetail/' + String(item.id)"
-                v-if="item.creator.djStatus === 0"
-                ><el-text class="w-100px" truncated>{{ item.name }}</el-text>
+              <el-menu-item @click="onHandleClick(item)" :index="'/musicdetail/' + String(item.id)"
+                v-if="item.creator.djStatus === 0"><el-text class="w-100px" truncated>{{ item.name }}</el-text>
               </el-menu-item>
             </template>
           </el-sub-menu>
@@ -60,13 +51,11 @@
             </template>
 
             <template v-for="(item, index) in userplaylist" :key="index">
-              <el-menu-item
-                @click="onHandleClick(item)"
-                :index="'/musicdetail/' + String(item.id)"
-                v-if="item.creator.djStatus === 10"
-                ><el-text class="w-100px" truncated>{{
-                  index == 0 ? (item.name = '我喜欢的音乐') : item.name
-                }}</el-text>
+              <el-menu-item @click="onHandleClick(item)" :index="'/musicdetail/' + String(item.id)"
+                v-if="item.creator.djStatus === 10">
+                <el-text class="w-100px" truncated>
+                  {{ index === 0 ? '我喜欢的音乐' : item.name }}
+                </el-text>
               </el-menu-item>
             </template>
           </el-sub-menu>
@@ -113,8 +102,17 @@ const musicDetailStore = useMusicDetailStore()
 // 左侧点击事件
 const onHandleClick = (v: any) => {
   // 点击左侧aside动态展示右边内容
-  musicDetailStore.getTrackAllDataAction(v.id, v.trackCount)
+  // 先清空之前的数据，避免显示旧数据
+  musicDetailStore.clearData()
+
+  // 先获取歌单详情，再获取歌曲列表
   musicDetailStore.getDetailsDataListAllAction(v.id)
+
+  // 延迟获取歌曲列表，避免同时请求导致的卡顿
+  // 特别是"我喜欢的音乐"歌单，歌曲数量可能很大
+  setTimeout(() => {
+    musicDetailStore.getTrackAllDataAction(v.id, v.trackCount)
+  }, 100)
 }
 </script>
 
@@ -122,6 +120,7 @@ const onHandleClick = (v: any) => {
 .aside {
   height: 100%;
 }
+
 .el-menu {
   --el-menu-bg-color: #ffffff;
   --el-menu-text-color: #000000;
@@ -134,15 +133,18 @@ const onHandleClick = (v: any) => {
       width: 25px;
       height: 25px;
     }
+
     span {
       padding-left: 10px;
     }
   }
+
   .el-sub-menu {
     .aside_video_icon {
       width: 25px;
       height: 25px;
     }
+
     span {
       padding-left: 10px;
     }
@@ -158,6 +160,7 @@ const onHandleClick = (v: any) => {
     background-color: #a59a9a;
   }
 }
+
 // /选中时的背景颜色
 :deep(.el-menu-item.is-active) {
   background-color: #e9e6e6;

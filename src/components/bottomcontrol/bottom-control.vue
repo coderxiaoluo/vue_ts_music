@@ -1,16 +1,7 @@
 <template>
   <div class="bottom-control">
-    <audio
-      ref="audioEl"
-      v-show="false"
-      :src="musicUrl[0]?.url"
-      controls
-      @play="onPlay"
-      @pause="onPause"
-      @ended="overAudio"
-      @canplay="canplayLoad"
-      @timeupdate="onTimeupDateMusic"
-    ></audio>
+    <audio ref="audioEl" v-show="false" :src="currentMusicUrl" controls @play="onPlay" @pause="onPause"
+      @ended="overAudio" @canplay="canplayLoad" @timeupdate="onTimeupDateMusic"></audio>
 
     <!-- left部分 音乐 -->
     <songLeft :currentMusic="currentMusic" />
@@ -53,46 +44,24 @@
           <el-slider @input="onInputTime" v-model="sliderbar" :show-tooltip="false" size="small" />
         </div>
         <!-- 结束时间 -->
-        <div class="endTime" v-if="musicUrl[0]">{{ formatDuration(musicUrl[0]?.time) }}</div>
+        <div class="endTime" v-if="currentMusic.dt">{{ formatDuration(currentMusic.dt) }}</div>
         <div class="endTime" v-else>00:00</div>
       </div>
     </div>
 
     <!-- right -->
-    <SongRight
-      @emit-volume="onVolumeEmitClick"
-      @on-mute-volume="onMuteEmitClick"
-      @emit-play-list="handlePLayListEmitClick"
-    />
+    <SongRight @emit-volume="onVolumeEmitClick" @on-mute-volume="onMuteEmitClick"
+      @emit-play-list="handlePLayListEmitClick" />
     <!-- 抽屉 -->
-    <el-drawer
-      v-model="table"
-      :modal="true"
-      :lock-scroll="true"
-      :z-index="78"
-      :with-header="false"
-      :show-close="false"
-      :append-to-body="true"
-      direction="rtl"
-      size="25%"
-      height="83%"
-    >
+    <el-drawer v-model="table" :modal="true" :lock-scroll="true" :z-index="78" :with-header="false" :show-close="false"
+      :append-to-body="true" direction="rtl" size="25%" height="83%">
       <h2 class="songlist">
         <span v-if="playMusicData.length !== 0">{{ playMusicData.length }}首</span>
         <span class="start-text" v-else>忍者时代即将结束</span>
       </h2>
-      <el-table
-        class="table"
-        :data="playMusicData"
-        highlight-current-row
-        :show-header="false"
-        stripe
-        lazy
-        element-loading-text="加载中..."
-        style="width: 100%"
-        :row-class-name="tableRowClassName"
-        @row-dblclick="onPlayDbDrawerClick"
-      >
+      <el-table class="table" :data="playMusicData" highlight-current-row :show-header="false" stripe lazy
+        element-loading-text="加载中..." style="width: 100%" :row-class-name="tableRowClassName"
+        @row-dblclick="onPlayDbDrawerClick">
         <el-table-column class="musicName" property="name" label="name" width="150">
           <template #default="scope">
             <el-text class="w-100px" truncated>{{ scope.row.name }}</el-text>
@@ -100,9 +69,8 @@
         </el-table-column>
         <el-table-column property="ar" width="120">
           <template #default="scope">
-            <el-text class="w-100px" truncated v-if="scope.row.ar[1]"
-              >{{ scope.row.ar[0].name }} / {{ scope.row?.ar[1]?.name }}</el-text
-            >
+            <el-text class="w-100px" truncated v-if="scope.row.ar[1]">{{ scope.row.ar[0].name }} / {{
+              scope.row?.ar[1]?.name }}</el-text>
             <el-text v-else>{{ scope.row.ar[0].name }} </el-text>
           </template>
         </el-table-column>
@@ -138,7 +106,7 @@ const playMusicStore = usePlayMusicStore()
 
 const recordStore = useRecordStore()
 
-const { currentMusic, musicUrl, isShowPlay, playMusicData } = storeToRefs(playMusicStore)
+const { currentMusic, isShowPlay, playMusicData, currentMusicUrl } = storeToRefs(playMusicStore)
 const { lyricTime } = storeToRefs(recordStore)
 
 const table = ref(false)
@@ -186,7 +154,7 @@ const playPause = () => {
 // 上一首
 const previousMusicClick = () => {
   // 没有歌曲时直接返回
-  if (musicUrl.value.length == 0) return
+  if (!currentMusic.value.id) return
   // 当等于第一首时直接返回
   if (currentMusic.value.index == 0) {
     ElMessage({
@@ -224,7 +192,7 @@ const previousMusicClick = () => {
 // 下一首
 const nextMusicClick = () => {
   // 没有歌曲时直接返回
-  if (musicUrl.value.length == 0) return
+  if (!currentMusic.value.id) return
   // 最后一首直接返回
   if (currentMusic.value.index == playMusicData.value.length - 1) {
     ElMessage({
@@ -265,7 +233,7 @@ const sliderbar = ref(0)
 let currentTimes = ref(0)
 // 滑块事件
 const onInputTime = (v: any) => {
-  if (musicUrl.value.length == 0) return
+  if (!currentMusic.value.id || !audioEl.value) return
   currentTimes.value = Math.floor(durationTime.value * (v / 100))
   audioEl.value.currentTime = Math.floor(durationTime.value * (v / 100))
 }
@@ -393,38 +361,46 @@ const onMuteEmitClick = (v: boolean) => {
       display: flex;
       justify-content: space-around;
       margin: 0px 110px 0 100px;
+
       span {
         width: 25px;
         height: 25px;
         cursor: pointer;
         margin: 0 10px;
+
         .playicon {
           width: 100%;
           height: 80%;
         }
+
         .playicon1 {
           width: 100%;
           height: 70%;
         }
       }
     }
+
     .progressBar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 10px;
+
       // 滑块
       .slider-demo-block {
         display: flex;
         flex: 1;
         align-items: center;
       }
+
       .slider-demo-block .el-slider {
         margin: 0 12px;
       }
+
       :deep(.el-slider) {
         --el-slider-main-bg-color: #ec4141;
       }
+
       :deep(.el-slider__button-wrapper) {
         --el-slider-main-bg-color: skyblue;
         --el-slider-button-size: 10px;
@@ -442,11 +418,13 @@ const onMuteEmitClick = (v: boolean) => {
     color: var(--color-black-primary);
   }
 }
+
 .el-table {
   :deep(.back-row-index) {
     .el-text {
       color: red;
     }
+
     color: red;
   }
 
