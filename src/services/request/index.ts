@@ -14,7 +14,15 @@ interface LInstanceInterceptors<T = AxiosResponse> {
 
 interface LRequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
   interceptors?: LInstanceInterceptors<T>
+  cache?: boolean
+  cacheKey?: string
+  debounce?: number
 }
+
+// 请求缓存池
+const requestCache = new Map<string, any>()
+// 防抖定时器Map
+const debounceTimers = new Map<string, NodeJS.Timeout>()
 
 class LRequest {
   instance: AxiosInstance
@@ -24,32 +32,29 @@ class LRequest {
     // 全局的拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        // console.log('全局请求成功拦截')
         NProgress.start()
         return config
       },
       (err) => {
-        NProgress.start()
-        return err
+        NProgress.done()
+        return Promise.reject(err)
       }
     )
 
     this.instance.interceptors.response.use(
       (res) => {
-        // console.log('全局响应成功拦截')
         NProgress.done()
         return res.data
       },
       (err) => {
-        // console.log('全局响应失败拦截')
         NProgress.done()
-        return err
+        return Promise.reject(err)
       }
     )
 
-    // 实例的拦截器
+    // 实例的拦截器 - 修复拦截器顺序
     this.instance.interceptors.request.use(
-      // config.interceptors?.requestInterceptor,
+      config.interceptors?.requestInterceptor,
       config.interceptors?.requestInterceptorCatch
     )
     this.instance.interceptors.response.use(
@@ -57,8 +62,57 @@ class LRequest {
       config.interceptors?.responseInterceptorCatch
     )
   }
+  
+  // 生成请求缓存key
+  private generateCacheKey(config: LRequestConfig): string {
+    const { url, method, params, data } = config
+    return `${method || 'GET'}:${url || ''}:${JSON.stringify(params || {})}:${JSON.stringify(data || {})}`
+  }
+  
+  // 清除指定缓存
+  clearCache(key?: string) {
+    if (key) {
+      requestCache.delete(key)
+    } else {
+      requestCache.clear()
+    }
+  }
+  
+  // 清除防抖定时器
+  clearDebounce(key: string) {
+    const timer = debounceTimers.get(key)
+    if (timer) {
+      clearTimeout(timer)
+      debounceTimers.delete(key)
+    }
+  }
+
   // request 请求
   request<T = any>(config: LRequestConfig<T>) {
+    // 生成缓存key
+    const cacheKey = config.cacheKey || this.generateCacheKey(config)
+    
+    // 检查是否需要缓存且缓存存在
+    if (config.cache && requestCache.has(cacheKey)) {
+      return Promise.resolve(requestCache.get(cacheKey))
+    }
+    
+    // 检查是否需要防抖
+    if (config.debounce) {
+      this.clearDebounce(cacheKey)
+      return new Promise<T>((resolve, reject) => {
+        debounceTimers.set(cacheKey, setTimeout(() => {
+          this.sendRequest(config, cacheKey).then(resolve).catch(reject)
+        }, config.debounce))
+      })
+    }
+    
+    // 正常发送请求
+    return this.sendRequest(config, cacheKey)
+  }
+  
+  // 发送请求的实际方法
+  private sendRequest<T = any>(config: LRequestConfig<T>, cacheKey: string): Promise<T> {
     if (config.interceptors?.requestInterceptor) {
       config = config.interceptors.requestInterceptor(config)
     }
@@ -70,6 +124,10 @@ class LRequest {
           if (config.interceptors?.responseInterceptor) {
             res = config.interceptors.responseInterceptor(res)
           }
+          // 缓存请求结果
+          if (config.cache) {
+            requestCache.set(cacheKey, res)
+          }
           resolve(res)
         })
         .catch((err: any) => {
@@ -80,10 +138,12 @@ class LRequest {
         })
     })
   }
+  
   // get请求
   get<T = any>(config: LRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'GET' })
   }
+  
   // post请求
   post<T = any>(config: LRequestConfig<T>) {
     return this.request<T>({ ...config, method: 'POST' })

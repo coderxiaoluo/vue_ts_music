@@ -34,12 +34,13 @@
     <!-- 弹窗 -->
 
     <el-dialog
-      classy="homeDialog"
+      class="homeDialog"
       v-model="dialogVisible"
       append-to-body
       title="欢迎来到小罗音乐"
       width="30%"
       center
+      destroy-on-close
     >
       <div class="box">
         <p>此项目仅供学习</p>

@@ -9,7 +9,15 @@
             <img :src="item.coverImgUrl" alt="" />
           </div>
           <div class="listContainer">
-            <el-table :data="item?.tracks" stripe :show-header="false" style="width: 100%">
+            <el-table 
+              :data="item?.tracks" 
+              stripe 
+              :show-header="false" 
+              style="width: 100%"
+              :row-key="(row, index) => index"
+              size="small"
+              :default-expand-all="false"
+            >
               <el-table-column type="index" width="50" />
               <el-table-column prop="first" label="" width="600" />
               <el-table-column prop="second" label="" width="300" />

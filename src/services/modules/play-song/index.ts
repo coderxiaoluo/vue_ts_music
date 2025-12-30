@@ -1,16 +1,20 @@
 import lRequest from '../../'
+import type { LRequestConfig } from '../../request'
+
 // 获取音乐URL
-export function getSongUrl(id: string, cookie: string) {
-  if (!id) return
+export function getSongUrl(id: string | number, cookie: string, config?: LRequestConfig) {
+  if (!id) return Promise.reject(new Error('歌曲ID不能为空'))
   return lRequest.get({
     url: `/song/url?id=${id}`,
     params: {
       timestamp: new Date().getTime(),
       withCredentials: true,
       cookie
-    }
+    },
+    ...config
   })
 }
+
 // 获取音乐URL 新版
 /* 
 standard => 标准
@@ -23,12 +27,13 @@ jyeffect =>
 sky => 沉浸环绕声, 
 jymaster => 超清母带
 */
-export function newSongUrlLevel(id: string, level?: string = 'jymaster') {
+export function newSongUrlLevel(id: string | number, level: string = 'jymaster', config?: LRequestConfig) {
   return lRequest.get({
-    url: `song/url/v1?id=${id}&level=jymaster`,
-    data: {
+    url: `song/url/v1?id=${id}&level=${level}`,
+    params: {
       withCredentials: true
-    }
+    },
+    ...config
   })
 }
 
@@ -40,16 +45,19 @@ export function newSongUrlLevel(id: string, level?: string = 'jymaster') {
 // export function getIntelligenceUrl(id: string, cookie: string) {
 //   return lRequest.get({
 //     url: `/playmode/intelligence/list?id=${id}&pid=${2434468518}`,
-//     data: {
+//     params: {
 //       withCredentials: true,
 //       cookie
 //     }
 //   })
 // }
 
-export function getCheckMusic(id: string) {
+export function getCheckMusic(id: string | number, config?: LRequestConfig) {
   return lRequest.get({
     url: `/check/music?id=${id}`,
-    withCredentials: true
+    params: {
+      withCredentials: true
+    },
+    ...config
   })
 }

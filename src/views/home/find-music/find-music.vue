@@ -1,6 +1,6 @@
 <template>
   <div class="find-music">
-    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" :lazy="true" tab-position="top">
       <el-tab-pane name="/findmusic/recommend">
         <template #label>
           <span class="custom-tabs-label">

@@ -9,7 +9,7 @@
     </div>
     <!-- 歌曲列表展示 -->
     <div class="content">
-      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" :lazy="true" tab-position="top" stretch>
         <el-tab-pane label="歌曲列表" name="first"> <DateList /></el-tab-pane>
         <el-tab-pane label="评论" name="second"> <Comment /> </el-tab-pane>
         <el-tab-pane label="收藏者" name="third">

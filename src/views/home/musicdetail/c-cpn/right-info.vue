@@ -14,7 +14,7 @@
     </div>
     <!-- 按钮 -->
     <div class="buttons">
-      <el-button type="danger" @click="onPlayAllClick">
+      <el-button type="danger" @click="onPlayAllClick" size="large">
         <template #default>
           <svg class="icon playIcon" aria-hidden="true">
             <use xlink:href="#icon-bofang3"></use>
@@ -22,8 +22,8 @@
           <span>播放全部</span>
         </template>
       </el-button>
-      <el-button>收藏</el-button>
-      <el-button>分享</el-button>
+      <el-button :icon="'Star'" size="large">收藏</el-button>
+      <el-button :icon="'Share'" size="large">分享</el-button>
     </div>
     <!-- 标签 -->
     <div class="tags">
