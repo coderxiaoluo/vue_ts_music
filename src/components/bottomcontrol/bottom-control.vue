@@ -356,14 +356,18 @@ function onTimeupDateMusic() {
 
 // 音量
 const onVolumeEmitClick = (v: any) => {
-  audioEl.value.volume = v
+  if (audioEl.value) {
+    audioEl.value.volume = v
+  }
 }
 // 是否静音
 const onMuteEmitClick = (v: boolean) => {
-  if (v) {
-    audioEl.value.volume = 0
-  } else {
-    audioEl.value.volume = 0.5
+  if (audioEl.value) {
+    if (v) {
+      audioEl.value.volume = 0
+    } else {
+      audioEl.value.volume = 0.5
+    }
   }
 }
 </script>

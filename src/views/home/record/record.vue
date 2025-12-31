@@ -61,9 +61,9 @@
       </el-main>
     </el-container>
 
-    <div class="click" ontouchstart="toucuPlayColor(event)" onclick="playColor(event)">
-      <h1>五颜六色的点击特效</h1>
-    </div>
+    <!-- <div class="click" ontouchstart="toucuPlayColor(event)" onclick="playColor(event)">
+        <h1>五颜六色的点击特效</h1>
+      </div> -->
   </div>
 </template>
 
@@ -74,6 +74,7 @@ import { localCache } from '@/utils/localCache'
 import { useRecordStore } from '@/stores/record'
 import { currentDuration } from '@/utils/formatplay'
 import { parseLyric } from '@/utils/parse_lyric'
+import { ArrowDownBold } from '@element-plus/icons-vue'
 // import '@/utils/click'
 
 import { usePlayMusicStore } from '@/stores/play-music'

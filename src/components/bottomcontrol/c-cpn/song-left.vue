@@ -32,6 +32,7 @@
 import { useRecordStore } from '@/stores/record'
 import { storeToRefs } from 'pinia'
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ArrowUpBold, ArrowDownBold } from '@element-plus/icons-vue'
 
 interface Props {
   currentMusic: any
