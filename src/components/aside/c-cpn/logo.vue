@@ -1,8 +1,8 @@
 <template>
   <div class="logo" @click="onHomeClick">
-    <img v-if="!isFold" src="@/assets/img/logo/viteimgpng.png" alt="logo" />
-    <img class="img2" v-else src="@/assets/img/logo/logoimg4.png" alt="logo" />
-    <h1 v-if="!isFold">xiaoluomusic</h1>
+    <img v-if="!isFold" :src="logo.logoimg2" alt="logo" />
+    <img class="img2" v-else :src="logo.logoimg" alt="logo" />
+    <h1 v-if="!isFold">{{ logo.title }}</h1>
   </div>
 </template>
 
@@ -38,20 +38,46 @@ const onHomeClick = () => {
   background-color: var(--music-logo-bgc);
   box-sizing: border-box;
   cursor: pointer;
+
   img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     margin-left: 10px;
   }
+
   .img2 {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
   }
+
   h1 {
     font-size: 20px;
-    // color: var(--music-aside-bgc);
-    color: #ffffff;
     font-weight: 900;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 10px rgba(102, 126, 234, 0.5),
+      0 0 20px rgba(118, 75, 162, 0.3),
+      0 0 30px rgba(240, 147, 251, 0.2);
+    animation: glow 2s ease-in-out infinite alternate;
+    margin-left: 10px;
+  }
+
+  @keyframes glow {
+    from {
+      filter: brightness(1);
+      text-shadow: 0 0 10px rgba(102, 126, 234, 0.5),
+        0 0 20px rgba(118, 75, 162, 0.3),
+        0 0 30px rgba(240, 147, 251, 0.2);
+    }
+
+    to {
+      filter: brightness(1.2);
+      text-shadow: 0 0 20px rgba(102, 126, 234, 0.8),
+        0 0 30px rgba(118, 75, 162, 0.5),
+        0 0 40px rgba(240, 147, 251, 0.3);
+    }
   }
 }
 </style>

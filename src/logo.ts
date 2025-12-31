@@ -1,5 +1,8 @@
+import logoimg from '@/assets/img/logo/logo1.png'
+import logoimg2 from '@/assets/img/logo/logo.png'
+
 export default {
-  title: 'xiaoluomusic', //标题
-  logoimg2: './assets/img/logo/viteimgpng.png', //图片
-  logoimg: './assets/img/logo/logoimg4.png' //图片
+  title: 'xiaobomusic',
+  logoimg2,
+  logoimg
 }

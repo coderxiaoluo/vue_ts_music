@@ -123,7 +123,7 @@ if (!localCache.getCache('UserLogo')) localCache.setCache('UserLogo', 'xiaoluoMu
   .el-aside {
     height: 100%;
     background-color: var(--music-aside-bgc);
-    transition: all 0.5s;
+    transition: all 0.3s ease-in-out; // 缩短过渡动画时长，使用更平滑的缓动函数
   }
   // 主体
   .el-main {

@@ -34,10 +34,13 @@
               </el-icon>
               <span>我的歌单</span>
             </template>
-            <template v-for="(item, index) in userplaylist" :key="index">
-              <el-menu-item @click="onHandleClick(item)" :index="'/musicdetail/' + String(item.id)"
-                v-if="item.creator.djStatus === 0"><el-text class="w-100px" truncated>{{ item.name }}</el-text>
-              </el-menu-item>
+            <!-- 折叠时不渲染子菜单，减少DOM元素 -->
+            <template v-if="!isFold">
+              <template v-for="item in userplaylist.filter(item => item.creator.djStatus === 0)" :key="item.id">
+                <el-menu-item @click="onHandleClick(item)" :index="'/musicdetail/' + String(item.id)">
+                  <el-text class="w-100px" truncated>{{ item.name }}</el-text>
+                </el-menu-item>
+              </template>
             </template>
           </el-sub-menu>
           <el-sub-menu index="3">
@@ -49,14 +52,15 @@
               </el-icon>
               <span>收藏的歌单</span>
             </template>
-
-            <template v-for="(item, index) in userplaylist" :key="index">
-              <el-menu-item @click="onHandleClick(item)" :index="'/musicdetail/' + String(item.id)"
-                v-if="item.creator.djStatus === 10">
-                <el-text class="w-100px" truncated>
-                  {{ index === 0 ? '我喜欢的音乐' : item.name }}
-                </el-text>
-              </el-menu-item>
+            <!-- 折叠时不渲染子菜单，减少DOM元素 -->
+            <template v-if="!isFold">
+              <template v-for="(item, index) in userplaylist.filter(item => item.creator.djStatus === 10)" :key="item.id">
+                <el-menu-item @click="onHandleClick(item)" :index="'/musicdetail/' + String(item.id)">
+                  <el-text class="w-100px" truncated>
+                    {{ index === 0 ? '我喜欢的音乐' : item.name }}
+                  </el-text>
+                </el-menu-item>
+              </template>
             </template>
           </el-sub-menu>
         </template>

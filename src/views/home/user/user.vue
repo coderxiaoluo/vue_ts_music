@@ -2,7 +2,7 @@
   <div class="user">
     <!-- 背景 three.js 效果 -->
     <div class="bg-container">
-      <FloatingLines :enabled-waves="['top', 'middle', 'bottom']" :line-count="[8, 8, 10]"
+      <FloatingLines :enabled-waves="['top', 'middle', 'bottom']" :line-count="[4, 3, 5]"
         :line-distance="[100, 80, 90]" :bend-radius="5.0" :bend-strength="-5.0" :interactive="true" :parallax="true" />
     </div>
 
