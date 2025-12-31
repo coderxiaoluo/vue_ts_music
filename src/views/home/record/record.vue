@@ -136,14 +136,20 @@ const startMarquee = (element: HTMLElement | undefined) => {
   const textWidth = element.scrollWidth
 
   // 如果文字宽度小于容器宽度，不需要滚动
-  if (textWidth <= containerWidth) return
+  if (textWidth <= containerWidth) {
+    // 确保文字居中
+    element.style.transform = 'translateX(0)'
+    return
+  }
 
   let offset = 0
   const speed = 0.8 // 滚动速度
+  const padding = 50 // 滚动时文字之间的间距
 
   const animate = () => {
     offset -= speed
-    if (offset <= -textWidth) {
+    // 当文字完全滚出容器后，重新开始滚动，添加间距
+    if (offset <= -(textWidth + padding)) {
       offset = containerWidth
     }
     element.style.transform = `translateX(${offset}px)`
@@ -215,8 +221,8 @@ onUnmounted(() => {
   transform: translateY(0%);
   z-index: 77;
   transition: bottom 0.5s ease;
-  background-image: linear-gradient(to bottom, rgb(227, 69, 69));
-  overflow-y: scroll;
+  overflow-y: hidden;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.9) 100%);
 
   .bgc-filer {
     position: absolute;
@@ -224,9 +230,11 @@ onUnmounted(() => {
     right: 0;
     bottom: 0;
     left: 0;
-    filter: blur(99px);
+    background: inherit;
+    filter: blur(99px) brightness(0.8);
     z-index: -10;
     transform: scale(1.3);
+    opacity: 0.8;
   }
 }
 
@@ -371,56 +379,69 @@ onUnmounted(() => {
   }
 
   .right-lyric {
-    width: 400px;
+    width: 500px;
     height: 500px;
-    // background-color: rgb(209, 27, 206);
-    margin-left: 30px;
+    margin-left: 50px;
     z-index: 77;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-    // overflow: hidden;
     .title {
       width: 100%;
       text-align: center;
+      margin-bottom: 40px;
+      padding: 20px 0;
 
       // 文字滚动容器样式
       .marquee-container {
         overflow: hidden;
         position: relative;
         white-space: nowrap;
-        margin: 8px 0;
+        margin: 15px 0;
+        padding: 0 20px;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         .marquee-text {
           display: inline-block;
           white-space: nowrap;
           transition: transform 0.1s linear;
+          line-height: 1.6;
         }
       }
 
       .musicName {
-        font-size: 30px;
+        font-size: 36px;
         margin: 0;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        letter-spacing: 0.5px;
       }
 
       .album {
         margin: 0;
-        font-size: 14px;
-        color: #666;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+        letter-spacing: 0.3px;
       }
 
       .singer {
-        font-size: 12px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
       }
     }
 
     .lyrics {
       position: relative;
-      margin-top: 30px;
       width: 100%;
-      height: 400px;
-      // background-color: darkcyan;
+      height: 350px;
       overflow-y: scroll;
-      overflow-x: auto;
-      padding-right: 40px;
+      overflow-x: hidden;
       /* 隐藏滚动条 */
       scrollbar-width: none;
 
@@ -434,24 +455,47 @@ onUnmounted(() => {
         position: absolute;
         width: 100%;
         text-align: center;
-        top: 180px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0 20px;
         z-index: 88;
 
         li {
           height: 60px;
-          font-size: 16px;
-          color: #343333;
+          font-size: 18px;
+          color: rgba(255, 255, 255, 0.6);
+          line-height: 60px;
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+          margin: 8px 0;
+          border-radius: 30px;
+          padding: 0 30px;
+          cursor: pointer;
+          user-select: none;
+        }
+
+        li:hover {
+          color: rgba(255, 255, 255, 0.9);
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateX(10px);
         }
 
         li.active {
-          color: #000;
-          font-weight: 900;
-          font-size: 20px;
+          color: #fff;
+          font-weight: 700;
+          font-size: 24px;
+          transform: scale(1.05);
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
       }
 
       ul.top {
         top: 30px;
+        transform: translate(-50%, 0);
       }
     }
   }
