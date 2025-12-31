@@ -411,14 +411,18 @@ const setup = () => {
 
   const handlePointerMove = (event: PointerEvent) => {
     const rect = renderer.domElement.getBoundingClientRect();
+    // 检查鼠标是否在renderer.domElement内
+    const isInside = event.clientX >= rect.left && event.clientX <= rect.right &&
+      event.clientY >= rect.top && event.clientY <= rect.bottom;
+
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     const dpr = renderer.getPixelRatio();
 
     targetMouseRef.value.set(x * dpr, (rect.height - y) * dpr);
-    targetInfluenceRef.value = 1.0;
+    targetInfluenceRef.value = isInside ? 1.0 : 0.0;
 
-    if (props.parallax) {
+    if (props.parallax && isInside) {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       const offsetX = (x - centerX) / rect.width;
@@ -432,7 +436,8 @@ const setup = () => {
   };
 
   if (props.interactive) {
-    renderer.domElement.addEventListener('pointermove', handlePointerMove);
+    // 将事件监听器添加到window对象，确保始终能接收鼠标事件
+    window.addEventListener('pointermove', handlePointerMove);
     renderer.domElement.addEventListener('pointerleave', handlePointerLeave);
   }
 
@@ -465,7 +470,8 @@ const setup = () => {
     }
 
     if (props.interactive) {
-      renderer.domElement.removeEventListener('pointermove', handlePointerMove);
+      // 移除window对象上的事件监听器
+      window.removeEventListener('pointermove', handlePointerMove);
       renderer.domElement.removeEventListener('pointerleave', handlePointerLeave);
     }
 

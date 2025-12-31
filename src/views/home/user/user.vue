@@ -2,8 +2,8 @@
   <div class="user">
     <!-- 背景 three.js 效果 -->
     <div class="bg-container">
-      <FloatingLines :enabled-waves="['top', 'middle', 'bottom']" :line-count="[10, 15, 20]" :line-distance="[8, 6, 4]"
-        :bend-radius="5.0" :bend-strength="-0.5" :interactive="true" :parallax="true" />
+      <FloatingLines :enabled-waves="['top', 'middle', 'bottom']" :line-count="[8, 8, 10]"
+        :line-distance="[100, 80, 90]" :bend-radius="5.0" :bend-strength="-5.0" :interactive="true" :parallax="true" />
     </div>
 
     <!-- 前景内容 -->
@@ -99,8 +99,9 @@ const handleMusicDetailClick = (v: any) => {
     left: 0;
     width: 100%;
     height: calc(100vh - 85px);
-    z-index: 0;
+    z-index: 0; // 设置为0，让它能接收鼠标事件但不会遮挡内容
     overflow: hidden;
+    pointer-events: auto; // 确保能接收鼠标事件
   }
 
   .info-message {
@@ -114,8 +115,8 @@ const handleMusicDetailClick = (v: any) => {
     background-size: 100% 100%;
     overflow: hidden;
     position: relative;
-    z-index: 1;
-    backdrop-filter: blur(5px);
+    z-index: 2; // 设置为2，确保内容显示在背景之上
+    // backdrop-filter: blur(5px);
   }
 
   // @keyframes bigname {
@@ -185,7 +186,7 @@ const handleMusicDetailClick = (v: any) => {
 
     .address {
       font-size: 14px;
-      color: #3d3c3c;
+      color: #f9f9f9;
     }
   }
 }
@@ -194,6 +195,11 @@ const handleMusicDetailClick = (v: any) => {
   margin-top: 30px;
   width: 100%;
   height: 100vh;
+  position: relative;
+  z-index: 2; // 设置为2，确保歌单列表显示在背景之上
+  background-color: #f8f5f5; // 添加背景色，确保内容清晰可见
+  padding: 20px;
+  box-sizing: border-box;
 
   h2 {
     font-size: 20px;
@@ -203,8 +209,8 @@ const handleMusicDetailClick = (v: any) => {
 
   .collect {
     display: flex;
-    height: 100%;
-    float: 1;
+    height: calc(100% - 40px);
+    flex: 1;
 
     ul {
       display: flex;
@@ -221,16 +227,26 @@ const handleMusicDetailClick = (v: any) => {
         overflow: hidden;
         cursor: pointer;
         color: #060606;
+        background-color: white; // 添加背景色，确保歌单项清晰可见
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); // 添加阴影，增强视觉效果
+        transition: all 0.3s ease; // 添加过渡效果，提升交互体验
 
         img {
           width: 100%;
           height: 200px;
           margin-bottom: 10px;
-          border-radius: 10px;
+          border-radius: 10px 10px 0 0; // 调整圆角，使图片与容器更匹配
         }
 
         p {
           font-size: 16px;
+          padding: 0 10px 10px;
+          margin: 0;
+        }
+
+        &:hover {
+          transform: translateY(-5px); // 鼠标悬停时上移，增强交互体验
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); // 增强阴影效果
         }
       }
     }
