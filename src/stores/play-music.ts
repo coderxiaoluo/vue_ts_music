@@ -108,18 +108,17 @@ export const usePlayMusicStore = defineStore('playMusic', () => {
       })
 
       if (result.code === 200 && result.data) {
-        // 存储到Map中
-        result.data.forEach((item: MusicUrlItem) => {
-          musicUrl.value.set(item.id, item)
-        })
+          // 存储到Map中
+          result.data.forEach((item: MusicUrlItem) => {
+            musicUrl.value.set(item.id, item)
+          })
 
-        if (!preload) {
-          isShowPlay.value = true
+          if (!preload) {
+            isShowPlay.value = true
+            // 只有非预加载时才预取下一首，避免无限递归
+            preloadNextSong(id)
+          }
         }
-
-        // 预加载下一首歌曲
-        preloadNextSong(id)
-      }
     } catch (err) {
       if (!preload) {
         error.value = '获取音乐地址失败'
