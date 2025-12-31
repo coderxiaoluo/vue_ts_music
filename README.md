@@ -1,16 +1,15 @@
-# 小罗音乐 (xiaoluoMusic)
+# 小波音乐 (xiaoboMusic)
 
 一个基于 Vue 3 + TypeScript + Pinia 开发的现代化音乐播放器，提供流畅的音乐播放体验和丰富的音乐资源。
 
 ## 🎯 项目介绍
 
-小罗音乐是一款功能齐全的音乐播放器，支持音乐播放、歌单管理、歌词显示、个性化推荐等核心功能。采用现代化的前端技术栈开发，具有良好的用户体验和性能表现。
+仿网易云音乐是一款功能齐全的音乐播放器，支持音乐播放、歌单管理、歌词显示、个性化推荐等核心功能。采用现代化的前端技术栈开发，具有良好的用户体验和性能表现。
 
 ## 📸 项目截图
 
-![首页截图](https://tuchuangs.com/imgs/2023/06/20/4c4a668f17346c80.png)
+<img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/ef39061d-3331-4f34-a5ed-1ee6825bcdbb" />
 
-![播放页面截图](https://tuchuangs.com/imgs/2023/06/20/31abe5e3501466d6.png)
 
 ## ✨ 功能特性
 
@@ -193,8 +192,8 @@ npm run format
 
 如有问题或建议，欢迎通过以下方式联系：
 
-- GitHub Issues：[https://github.com/coderxiaoluo/vue_ts_music/issues](https://github.com/coderxiaoluo/vue_ts_music/issues)
-- 邮箱：coderxiaoluo@example.com
+- GitHub Issues：[https://github.com/coderxiaoluo/vue3-ts-netease-music](https://github.com/coderxiaoluo/vue3-ts-netease-music)
+- 邮箱：1195646651@qq.com
 
 ## 🙏 致谢
 
