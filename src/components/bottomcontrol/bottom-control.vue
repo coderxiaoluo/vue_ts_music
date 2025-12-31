@@ -1,80 +1,89 @@
 <template>
   <div class="bottom-control">
     <audio ref="audioEl" v-show="false" :src="currentMusicUrl" controls @play="onPlay" @pause="onPause"
-      @ended="overAudio" @canplay="canplayLoad" @timeupdate="onTimeupDateMusic"></audio>
+      @ended="overAudio" @canplay="canplayLoad" @timeupdate="onTimeupDateMusic">
+    </audio>
 
-    <!-- left部分 音乐 -->
-    <songLeft :currentMusic="currentMusic" />
-    <div class="center">
-      <!-- 按钮相关 -->
-      <div class="buttons">
-        <span>
-          <svg @click="onchangeMusicList" class="icon playicon" aria-hidden="true">
+    <!-- 左侧歌曲信息 -->
+    <div class="left-section">
+      <songLeft :currentMusic="currentMusic" />
+    </div>
+
+    <!-- 中间播放控制 -->
+    <div class="center-section">
+      <!-- 播放按钮 -->
+      <div class="play-controls">
+        <span class="control-btn" @click="onchangeMusicList">
+          <svg class="icon" aria-hidden="true">
             <use :xlink:href="svgArr[svgIndex]"></use>
           </svg>
         </span>
-        <span>
-          <svg @click="previousMusicClick" class="icon playicon" aria-hidden="true">
+        <span class="control-btn" @click="previousMusicClick">
+          <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-shangyishou1"></use>
           </svg>
         </span>
-        <span>
-          <svg v-if="!isShowPlay" @click="playPause" class="icon playicon" aria-hidden="true">
+        <span class="control-btn play-main" @click="playPause">
+          <svg v-if="!isShowPlay" class="icon" aria-hidden="true">
             <use xlink:href="#icon-bofang4"></use>
           </svg>
-          <svg v-else @click="playPause" class="icon playicon" aria-hidden="true">
+          <svg v-else class="icon" aria-hidden="true">
             <use xlink:href="#icon-zanting"></use>
           </svg>
         </span>
-        <span>
-          <svg @click="nextMusicClick" class="icon playicon" aria-hidden="true">
+        <span class="control-btn" @click="nextMusicClick">
+          <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-xiayishou1"></use>
           </svg>
         </span>
       </div>
       <!-- 进度条 -->
-      <div class="progressBar">
+      <div class="progress-section">
         <!-- 开始时间 -->
-        <div class="currentTime">
-          <span v-if="currentTimes !== 0">{{ currentDuration(currentTimes) }}</span>
-          <span v-else>00:00</span>
+        <div class="time-text current">
+          <span>{{ currentDuration(currentTimes) }}</span>
         </div>
         <!-- 滑块 -->
-        <div class="slider-demo-block">
-          <el-slider @input="onInputTime" v-model="sliderbar" :show-tooltip="false" size="small" />
+        <div class="progress-slider">
+          <el-slider @input="onInputTime" v-model="sliderbar" :show-tooltip="false" size="small"
+            class="custom-slider" />
         </div>
         <!-- 结束时间 -->
-        <div class="endTime" v-if="currentMusic.dt">{{ formatDuration(currentMusic.dt) }}</div>
-        <div class="endTime" v-else>00:00</div>
+        <div class="time-text">
+          <span>{{ currentMusic.dt ? formatDuration(currentMusic.dt) : '00:00' }}</span>
+        </div>
       </div>
     </div>
 
-    <!-- right -->
-    <SongRight @emit-volume="onVolumeEmitClick" @on-mute-volume="onMuteEmitClick"
-      @emit-play-list="handlePLayListEmitClick" />
-    <!-- 抽屉 -->
+    <!-- 右侧音量和播放列表 -->
+    <div class="right-section">
+      <SongRight @emit-volume="onVolumeEmitClick" @emit-play-list="handlePLayListEmitClick" />
+    </div>
+
+    <!-- 播放列表抽屉 -->
     <el-drawer v-model="table" :modal="true" :lock-scroll="true" :z-index="78" :with-header="false" :show-close="false"
-      :append-to-body="true" direction="rtl" size="25%" height="83%">
-      <h2 class="songlist">
+      :append-to-body="true" direction="rtl" size="28%" height="85%" class="playlist-drawer">
+      <h2 class="songlist-title">
         <span v-if="playMusicData.length !== 0">{{ playMusicData.length }}首</span>
-        <span class="start-text" v-else>忍者时代即将结束</span>
+        <span v-else>暂无歌曲</span>
       </h2>
-      <el-table class="table" :data="playMusicData" highlight-current-row :show-header="false" stripe lazy
+      <el-table class="playlist-table" :data="playMusicData" highlight-current-row :show-header="false" lazy
         element-loading-text="加载中..." style="width: 100%" :row-class-name="tableRowClassName"
         @row-dblclick="onPlayDbDrawerClick">
-        <el-table-column class="musicName" property="name" label="name" width="150">
+        <el-table-column class="music-name-col" width="180">
           <template #default="scope">
-            <el-text class="w-100px" truncated>{{ scope.row.name }}</el-text>
+            <el-text truncated>{{ scope.row.name }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column property="ar" width="120">
+        <el-table-column class="artist-col" width="140">
           <template #default="scope">
-            <el-text class="w-100px" truncated v-if="scope.row.ar[1]">{{ scope.row.ar[0].name }} / {{
-              scope.row?.ar[1]?.name }}</el-text>
-            <el-text v-else>{{ scope.row.ar[0].name }} </el-text>
+            <el-text truncated>
+              {{ scope.row.ar[0].name }}
+              <span v-if="scope.row.ar[1]"> / {{ scope.row.ar[1].name }}</span>
+            </el-text>
           </template>
         </el-table-column>
-        <el-table-column prop="dt" width="100">
+        <el-table-column class="duration-col" width="100">
           <template #default="scope">
             <span>{{ formatDuration(scope.row.dt) }}</span>
           </template>
@@ -355,20 +364,16 @@ function onTimeupDateMusic() {
 }
 
 // 音量
-const onVolumeEmitClick = (v: any) => {
+const onVolumeEmitClick = (v: number) => {
   if (audioEl.value) {
-    audioEl.value.volume = v
+    // 确保音量值为数字类型
+    audioEl.value.volume = typeof v === 'string' ? parseFloat(v) : v
   }
 }
-// 是否静音
+// 是否静音 - 已由右侧组件处理，这里可以保留但不再使用固定值
 const onMuteEmitClick = (v: boolean) => {
-  if (audioEl.value) {
-    if (v) {
-      audioEl.value.volume = 0
-    } else {
-      audioEl.value.volume = 0.5
-    }
-  }
+  // 静音逻辑已由右侧组件通过emit-volume处理，这里可以留空或移除
+  // 保留此函数是为了兼容现有的事件绑定
 }
 </script>
 
@@ -378,98 +383,204 @@ const onMuteEmitClick = (v: boolean) => {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px;
-  border-top: 1px solid #ccc;
-  background-color: #ffffff;
+  height: 72px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
   z-index: 99;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   box-sizing: border-box;
-  padding: 5px;
-  overflow: hidden;
+  padding: 0 20px;
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
 
-  // 中间部分
-  .center {
+// 左侧歌曲信息
+.left-section {
+  flex: 0 0 auto;
+  min-width: 220px;
+  max-width: 320px;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+}
+
+// 中间播放控制部分
+.center-section {
+  flex: 0 1 auto;
+  min-width: 280px;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  // 播放按钮容器
+  .play-controls {
     display: flex;
-    flex-direction: column;
-    width: 400px;
-    justify-self: flex-start;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-width: 260px;
 
-    .buttons {
-      display: flex;
-      justify-content: space-around;
-      margin: 0px 110px 0 100px;
-
-      span {
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-        margin: 0 10px;
-
-        .playicon {
-          width: 100%;
-          height: 80%;
-        }
-
-        .playicon1 {
-          width: 100%;
-          height: 70%;
-        }
-      }
-    }
-
-    .progressBar {
+    // 播放按钮样式
+    .control-btn {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      background: transparent;
+      border: none;
+      position: relative;
 
-      // 滑块
-      .slider-demo-block {
-        display: flex;
-        flex: 1;
-        align-items: center;
+      &:hover {
+        background: rgba(0, 0, 0, 0.08);
+        transform: scale(1.05);
       }
 
-      .slider-demo-block .el-slider {
-        margin: 0 12px;
+      // 主播放按钮样式
+      &.play-main {
+        width: 38px;
+        height: 38px;
+        background: #ec4141;
+        box-shadow: 0 2px 6px rgba(236, 65, 65, 0.3);
+
+        &:hover {
+          background: #ff5252;
+          transform: scale(1.1);
+          box-shadow: 0 3px 10px rgba(236, 65, 65, 0.4);
+        }
+
+        .icon {
+          color: #fff;
+          width: 18px;
+          height: 18px;
+        }
       }
 
-      :deep(.el-slider) {
-        --el-slider-main-bg-color: #ec4141;
+      // 图标样式
+      .icon {
+        width: 18px;
+        height: 18px;
+        color: #333;
+        transition: all 0.3s ease;
       }
+    }
+  }
 
-      :deep(.el-slider__button-wrapper) {
-        --el-slider-main-bg-color: skyblue;
-        --el-slider-button-size: 10px;
+  // 进度条样式
+  .progress-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+
+    // 时间显示
+    .time-text {
+      font-size: 12px;
+      color: #999;
+      min-width: 42px;
+      text-align: center;
+      font-weight: 400;
+
+      &.current {
+        color: #ec4141;
+        font-weight: 500;
+      }
+    }
+
+    // 滑块容器
+    .progress-slider {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    // 自定义滑块样式
+    :deep(.custom-slider) {
+      width: 100%;
+
+      --el-slider-main-bg-color: #ec4141;
+      --el-slider-bar-bg-color: #e5e5e5;
+      --el-slider-button-size: 12px;
+      --el-slider-height: 3px;
+    }
+
+    :deep(.el-slider__button-wrapper) {
+      --el-slider-main-bg-color: #ec4141;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.3);
+        box-shadow: 0 0 0 8px rgba(236, 65, 65, 0.1);
       }
     }
   }
 }
 
-// 抽屉
-.songlist {
-  font-size: 14px;
+// 右侧音量和播放列表控制
+.right-section {
+  flex: 0 0 auto;
+  min-width: 220px;
+  max-width: 320px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+// 播放列表抽屉样式
+.playlist-drawer {
+  :deep(.el-drawer__body) {
+    padding: 24px;
+    background: #fafafa;
+  }
+}
+
+.songlist-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
   text-align: center;
-
-  .start-text {
-    color: var(--color-black-primary);
-  }
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.el-table {
-  :deep(.back-row-index) {
-    .el-text {
-      color: red;
-    }
+.playlist-table {
+  :deep(.el-table__row) {
+    transition: all 0.3s ease;
+    cursor: pointer;
 
-    color: red;
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  :deep(.back-row-index) {
+    background: rgba(236, 65, 65, 0.1);
+
+    .el-text {
+      color: #ec4141;
+      font-weight: 500;
+    }
   }
 
   .el-text {
     cursor: pointer;
+    font-size: 13px;
+  }
 
-    font-size: 12px;
+  :deep(.el-table__cell) {
+    padding: 12px 0;
+    font-size: 13px;
+    color: #333;
   }
 }
 </style>

@@ -1,28 +1,35 @@
 <template>
   <div class="user">
+    <!-- 背景 three.js 效果 -->
+    <div class="bg-container">
+      <FloatingLines :enabled-waves="['top', 'middle', 'bottom']" :line-count="[10, 15, 20]" :line-distance="[8, 6, 4]"
+        :bend-radius="5.0" :bend-strength="-0.5" :interactive="true" :parallax="true" />
+    </div>
+
+    <!-- 前景内容 -->
     <div class="info-message animate__animated animate__flip">
       <div class="left animate__animated animate__bounceInDown">
-        <h2 class="username">{{ userProfile.nickname }}</h2>
+        <h2 class="username">{{ userProfile.nickname || '测试用户' }}</h2>
         <div class="avatar">
-          <img :src="userProfile.avatarUrl" alt="" />
+          <img :src="userProfile.avatarUrl || 'https://picsum.photos/200/200'" alt="" />
         </div>
         <div class="user-info">
           <div class="statistics">
             <div class="item trends">
-              <p>{{ userProfile.sCount }}</p>
+              <p>{{ userProfile.sCount || 0 }}</p>
               <p>动态</p>
             </div>
             <div class="item follow">
-              <p>{{ userProfile.followeds }}</p>
+              <p>{{ userProfile.followeds || 0 }}</p>
               <p>关注</p>
             </div>
             <div class="item fans">
-              <p>{{ userProfile.follows }}</p>
+              <p>{{ userProfile.follows || 0 }}</p>
               <p>粉丝</p>
             </div>
           </div>
         </div>
-        <div class="address">地区:{{ userProfile.city }}</div>
+        <div class="address">地区:{{ userProfile.city || '未知' }}</div>
       </div>
     </div>
 
@@ -31,10 +38,10 @@
       <h2>全部的歌单</h2>
       <div class="collect">
         <ul>
-          <template v-for="item in userPlayList" :key="item.userId">
+          <template v-for="(item, index) in userPlayList" :key="item.id || index">
             <li @click="handleMusicDetailClick(item)">
-              <img :src="item.coverImgUrl" alt="" />
-              <p>{{ item.name }}</p>
+              <img :src="item.coverImgUrl || 'https://picsum.photos/200/200'" alt="" />
+              <p>{{ item.name || '未知歌单' }}</p>
             </li>
           </template>
         </ul>
@@ -50,10 +57,10 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 // 随机数
 import { randomMusic } from '@/utils/random'
-// 引入图片
-// import { swiperList } from '@/assets/data/user-bg'
 // img
 import { imgURL } from '@/utils/img-url'
+// 引入three.js效果组件
+import FloatingLines from '@/three/user-bg/FloatingLines.vue'
 
 //  TODO:  动态展示图片 有bug  可以换成判断性别切换动态背景  userProfile.value.gender
 // const bgImage = imgURL(swiperList[randomMusic(1, swiperList.length)].url)
@@ -82,19 +89,35 @@ const handleMusicDetailClick = (v: any) => {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  position: relative;
   // padding: 20px;
+
+  // three.js背景容器
+  .bg-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 85px);
+    z-index: 0;
+    overflow: hidden;
+  }
 
   .info-message {
     width: 100%;
     height: calc(100vh - 85px);
     display: flex;
     justify-content: center;
-    background: url('@/assets/img/bg3.jpg') no-repeat 100% 100%;
+    // background: rgba(0, 0, 0, 0.3);
     background-position: 0 0;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(5px);
   }
+
   // @keyframes bigname {
   //   // infinite
   //   0% {
@@ -110,12 +133,14 @@ const handleMusicDetailClick = (v: any) => {
     align-items: center;
     width: 200px;
     height: 500px;
+
     .username {
       font-size: 25px;
       font-weight: 900;
       color: #ffffff;
       margin-top: 20px;
     }
+
     .avatar {
       cursor: pointer;
       border: 2px solid #413f3f;
@@ -124,11 +149,13 @@ const handleMusicDetailClick = (v: any) => {
       overflow: hidden;
       border-radius: 50%;
       margin: 20px 0;
+
       img {
         width: 100%;
         height: 100%;
         transition: all 0.4s linear;
       }
+
       &:hover img {
         transform: rotate(10deg);
       }
@@ -139,6 +166,7 @@ const handleMusicDetailClick = (v: any) => {
       overflow: hidden;
       color: #ffffff;
     }
+
     .statistics {
       display: flex;
       width: 100%;
@@ -154,6 +182,7 @@ const handleMusicDetailClick = (v: any) => {
         }
       }
     }
+
     .address {
       font-size: 14px;
       color: #3d3c3c;
@@ -171,14 +200,17 @@ const handleMusicDetailClick = (v: any) => {
     font-weight: 800;
     color: #060606;
   }
+
   .collect {
     display: flex;
     height: 100%;
     float: 1;
+
     ul {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-start;
+
       li {
         position: relative;
         width: 200px;
@@ -196,6 +228,7 @@ const handleMusicDetailClick = (v: any) => {
           margin-bottom: 10px;
           border-radius: 10px;
         }
+
         p {
           font-size: 16px;
         }
