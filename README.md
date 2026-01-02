@@ -9,10 +9,14 @@
 ## 📸 项目截图
 
 **首页**:
+
 <img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/ef39061d-3331-4f34-a5ed-1ee6825bcdbb" />
 <img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/9bca14d6-9992-4090-bcac-e00ef6af1a83" />
+
 **歌单**:
+
 <img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/d9ba22ca-74d8-495b-8df6-1243a1692e34" />
+
 **userpage:**
 <img width="1920" height="869" alt="image" src="https://github.com/user-attachments/assets/aef41372-6e07-44d6-9856-39e260cd21e4" />
 
